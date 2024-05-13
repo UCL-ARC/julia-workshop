@@ -11,7 +11,6 @@ ENV JULIA_CPU_TARGET=${julia_cpu_target}
 RUN mkdir -p /root/.julia/environments/v1.10
 COPY Project.toml  /root/.julia/environments/v1.10/Project.toml
 COPY Manifest.toml /root/.julia/environments/v1.10/Manifest.toml
-RUN julia -e 'using InteractiveUtils; versioninfo(; verbose=true)'
 RUN julia --color=yes -e 'using Pkg; Pkg.instantiate()'
 
 # Copy notebook
