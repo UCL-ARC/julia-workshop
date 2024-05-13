@@ -5,7 +5,7 @@ FROM julia:1.10.3
 # host CPU.  Loosely based on
 # https://github.com/JuliaCI/julia-buildkite/blob/ea50eb719242bc3e844227a2ebf54a49d308bafc/utilities/build_envs.sh#L25-L32
 # https://github.com/JuliaCI/julia-buildkite/blob/ea50eb719242bc3e844227a2ebf54a49d308bafc/utilities/build_envs.sh#L58-L69
-RUN if [ $(arch) == "x86_64" ]; then \
+RUN if [ "$(arch)" == "x86_64" ]; then \
         export JULIA_CPU_TARGET='generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,base(1);x86-64-v4,-rdrnd,base(1)'; \
     else \
         export JULIA_CPU_TARGET='generic;carmel,clone_all;apple-m1,base(1)'; \
