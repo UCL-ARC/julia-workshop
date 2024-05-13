@@ -20,5 +20,5 @@ COPY notebook.jl /root/notebook.jl
 RUN julia --color=yes -e '\
 using Pkg;\
 using Pluto;\
-Pluto.activate_notebook_environment("notebook.jl");\
+Pluto.activate_notebook_environment("/root/notebook.jl");\
 Pkg.instantiate()'
