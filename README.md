@@ -21,29 +21,22 @@ using Pluto
 Pluto.run()
 ```
 
+You will need to load the notebook saved at `/root/notebook.jl`.
+
 ## Running the notebook in the Docker container
 
-We also provide a [Docker image](https://github.com/UCL-ARC/arc-drs-2024-julia-workshop/pkgs/container/arc-drs-2024-julia-workshop) (built for `linux/amd64`) for running the notebook, which you can pull with
+We also provide a [Docker image](https://github.com/UCL-ARC/arc-drs-2024-julia-workshop/pkgs/container/arc-drs-2024-julia-workshop) (built for `linux/amd64` and `linux/arm64`) for running the notebook, which you can pull with
 
 ```
 docker pull ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main
 ```
 
-and then run the container with
+and then run the notebook with
 
 ```
-docker run --network=host -ti ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main
+docker run --network=host -ti ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main -e 'using Pluto; Pluto.run()'
 ```
 
 The `--network=host` option is necessary to expose to the host the port inside the container where the Pluto server is running.
 There should be [alternative ways](https://stackoverflow.com/a/30116292) to achieve the same result, your mileage may vary.
-This has been tested on an x86_64 Arch Linux system.
-
-With the `docker run` command above the Julia REPL should automatically start, at which point you can directly run the Pluto notebook with
-
-```julia
-using Pluto
-Pluto.run()
-```
-
-as the environment has been already instantiated in the image.
+Note that the [host network driver](https://docs.docker.com/network/drivers/host/) is currently available for Docker by default only on Linux systems, but it is available as a [beta feature on Docker Desktop](https://docs.docker.com/network/drivers/host/#docker-desktop) v4.29+ after signing in Docker Hub.
