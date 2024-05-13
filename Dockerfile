@@ -18,7 +18,7 @@ COPY notebook.jl /root/notebook.jl
 
 # Precompile notebook environment
 RUN julia --color=yes -e '\
-using Pkg\
-using Pluto\
-Pluto.activate_notebook_environment("notebook.jl")\
+using Pkg;\
+using Pluto;\
+Pluto.activate_notebook_environment("notebook.jl");\
 Pkg.instantiate()'
