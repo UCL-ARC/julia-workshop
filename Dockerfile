@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 ARG platform=linux/amd64
-ARG julia_cpu_target
 FROM --platform=${platform} julia:1.10.3
 
 # Set `JULIA_CPU_TARGET` to same value as default Julia builds, to ensure we
 # don't specialise pkgimages to the current host CPU:
+ARG julia_cpu_target
 ENV JULIA_CPU_TARGET=${julia_cpu_target}
 
 # Instantiate Julia project
