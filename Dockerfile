@@ -11,13 +11,13 @@ ENV JULIA_CPU_TARGET="generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,bas
 RUN mkdir -p /root/.julia/environments/v1.10
 COPY Project.toml  /root/.julia/environments/v1.10/Project.toml
 COPY Manifest.toml /root/.julia/environments/v1.10/Manifest.toml
-RUN julia -e 'using Pkg; Pkg.instantiate()'
+RUN julia --color=yes -e 'using Pkg; Pkg.instantiate()'
 
 # Copy notebook
 COPY notebook.jl /root/notebook.jl
 
 # Precompile notebook environment
-RUN julia -e '\
+RUN julia --color=yes -e '\
 using Pkg\
 using Pluto\
 Pluto.activate_notebook_environment("notebook.jl")\
