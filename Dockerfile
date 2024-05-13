@@ -1,11 +1,11 @@
 # syntax=docker/dockerfile:1
-
-FROM --platform=linux/amd64 julia:1.10.3
+ARG platform=linux/amd64
+ARG julia_cpu_target
+FROM --platform=${platform} julia:1.10.3
 
 # Set `JULIA_CPU_TARGET` to same value as default Julia builds, to ensure we
 # don't specialise pkgimages to the current host CPU:
-# https://github.com/JuliaCI/julia-buildkite/blob/ea50eb719242bc3e844227a2ebf54a49d308bafc/utilities/build_envs.sh#L25-L32
-ENV JULIA_CPU_TARGET="generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,base(1);x86-64-v4,-rdrnd,base(1)"
+ENV JULIA_CPU_TARGET=${julia_cpu_target}
 
 # Instantiate Julia project
 RUN mkdir -p /root/.julia/environments/v1.10
