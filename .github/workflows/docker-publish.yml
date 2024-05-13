@@ -50,10 +50,10 @@ jobs:
         include:
           - platform: 'linux/amd64'
             # https://github.com/JuliaCI/julia-buildkite/blob/ea50eb719242bc3e844227a2ebf54a49d308bafc/utilities/build_envs.sh#L25-L32
-            julia_cpu_target: 'generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,base(1);x86-64-v4,-rdrnd,base(1)'
+            julia_cpu_target: 'generic'
           - platform: 'linux/arm64'
             # https://github.com/JuliaCI/julia-buildkite/blob/ea50eb719242bc3e844227a2ebf54a49d308bafc/utilities/build_envs.sh#L58-L69
-            julia_cpu_target: 'generic;cortex-a57;thunderx2t99;carmel,clone_all;apple-m1,base(3);neoverse-512tvb,base(3)'
+            julia_cpu_target: 'generic'
 
     steps:
       - name: Checkout repository
@@ -62,7 +62,7 @@ jobs:
       # Docker is terrible and doesn't like uppercase image names.
       - name: Lowercase image name
         run: |
-          IMAGE_NAME=$(echo $IMAGE_NAME | tr A-Z a-z)
+          IMAGE_NAME=$(echo ${IMAGE_NAME} | tr A-Z a-z)
           echo "IMAGE_NAME=${IMAGE_NAME}" >> "${GITHUB_ENV}"
 
       - name: Set up QEMU
