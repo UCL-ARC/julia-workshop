@@ -17,9 +17,8 @@ RUN julia -e 'using Pkg; Pkg.instantiate()'
 COPY notebook.jl /root/notebook.jl
 
 # Precompile notebook environment
-RUN julia -e '
-using Pkg
-using Pluto
-Pluto.activate_notebook_environment("notebook.jl")
-Pkg.instantiate()
-'
+RUN julia -e '\
+using Pkg\
+using Pluto\
+Pluto.activate_notebook_environment("notebook.jl")\
+Pkg.instantiate()'
