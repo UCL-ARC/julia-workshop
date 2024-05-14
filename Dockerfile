@@ -13,6 +13,7 @@ RUN if [ "$(arch)" = "x86_64" ]; then \
 
 RUN echo "arch=$(arch)"
 RUN echo "JULIA_CPU_TARGET=${JULIA_CPU_TARGET}"
+RUN julia --color=yes -e 'using InteractiveUtils; versioninfo(; verbose=true)'
 
 # Instantiate Julia project
 RUN mkdir -p /root/.julia/environments/v1.10
