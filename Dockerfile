@@ -11,6 +11,9 @@ RUN if [ "$(arch)" = "x86_64" ]; then \
         export JULIA_CPU_TARGET='generic;carmel,clone_all;apple-m1,base(1)'; \
     fi
 
+RUN echo "arch=$(arch)"
+RUN echo "JULIA_CPU_TARGET=${JULIA_CPU_TARGET}"
+
 # Instantiate Julia project
 RUN mkdir -p /root/.julia/environments/v1.10
 COPY Project.toml  /root/.julia/environments/v1.10/Project.toml
