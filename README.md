@@ -38,5 +38,5 @@ docker run --network=host -ti ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main -
 ```
 
 The `--network=host` option is necessary to expose to the host the port inside the container where the Pluto server is running.
-There should be [alternative ways](https://stackoverflow.com/a/30116292) to achieve the same result, your mileage may vary.
 Note that the [host network driver](https://docs.docker.com/network/drivers/host/) is currently available for Docker by default only on Linux systems, but it is available as a [beta feature on Docker Desktop](https://docs.docker.com/network/drivers/host/#docker-desktop) v4.29+ after signing in Docker Hub.
+There should be [alternative ways](https://stackoverflow.com/a/30116292) to achieve the same result, your mileage may vary.
