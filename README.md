@@ -4,7 +4,7 @@ This repository contains the material for the [Festival of Digital Research & Sc
 
 ## Running the notebook
 
-## Locally
+### Locally
 
 This is our recommended option, as you will more easily be able to keep playing with the notebook afterwards.
 
@@ -41,7 +41,7 @@ docker run -p 1234:1234 -ti ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main jul
 
 You will need to load the notebook saved at `/root/notebook.jl`.
 
-## GitHub Codespaces
+### GitHub Codespaces
 
 You can also take advantage of the ability of [GitHub Codespaces](https://github.com/features/codespaces) to run custom web apps.
 Go go the [Codespaces page of this repository](https://github.com/UCL-ARC/arc-drs-2024-julia-workshop/codespaces), click on the green button on the top right "Create codespace on main" and wait a few seconds for the codespace to start.
