@@ -6,7 +6,8 @@ This repository contains the material for the [Festival of Digital Research & Sc
 
 ### Locally
 
-This is our recommended option, as you will more easily be able to keep playing with the notebook afterwards.
+> [!NOTE]
+> This is our recommended option, as you will more easily be able to keep playing with the notebook afterwards.
 
 After [installing Julia](https://julialang.org/downloads/), start it with
 ```
