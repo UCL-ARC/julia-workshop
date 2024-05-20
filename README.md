@@ -34,7 +34,7 @@ docker pull ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main
 and then run the notebook with
 
 ```
-docker run --network=host -ti ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main -e 'using Pluto; Pluto.run()'
+docker run --network=host -ti ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main julia -e 'using Pluto; Pluto.run()'
 ```
 
 The `--network=host` option is necessary to expose to the host the port inside the container where the Pluto server is running.
