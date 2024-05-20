@@ -1,0 +1,29 @@
+{
+    "name": "Julia workshop for the Festival of Digital Research & Scholarship",
+    "build": {
+	"dockerfile": "Dockerfile",
+    },
+
+    "customizations": {
+	"vscode": {
+	    "extensions": [
+		// Add Jupyter and Python vscode extensions
+		"julialang.language-julia",
+	    ]
+	}
+    },
+
+    // Forward Pluto ports
+    "forwardPorts": [1234],
+    "portsAttributes": {
+	"1234": {
+	    "label": "Pluto",
+	    "requireLocalPort": true,
+	    "onAutoForward": "ignore"
+	}
+    },
+
+    // Use 'postAttachCommand' to run commands after the container is started.
+    "postAttachCommand": "julia -e 'using Pluto; Pluto.run()'"
+
+}
