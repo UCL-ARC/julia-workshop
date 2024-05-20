@@ -5,6 +5,8 @@ FROM julia:1.10.3
 # way, so we have to keep an external script and source it every time we need it.
 COPY julia_cpu_target.sh /julia_cpu_target.sh
 
+RUN julia --color=yes -e 'using InteractiveUtils; versioninfo()'
+
 # Instantiate Julia project
 RUN mkdir -p /root/.julia/environments/v1.10
 COPY Project.toml  /root/.julia/environments/v1.10/Project.toml
