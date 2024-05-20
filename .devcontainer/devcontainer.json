@@ -1,8 +1,6 @@
 {
     "name": "Julia workshop for the Festival of Digital Research & Scholarship",
-    "build": {
-	"dockerfile": "Dockerfile",
-    },
+    "image": "ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main",
 
     "customizations": {
 	"vscode": {
@@ -17,13 +15,13 @@
     "forwardPorts": [1234],
     "portsAttributes": {
 	"1234": {
-	    "label": "Pluto",
+	    "label": "Pluto server",
 	    "requireLocalPort": true,
 	    "onAutoForward": "ignore"
 	}
     },
 
     // Use 'postAttachCommand' to run commands after the container is started.
-    "postAttachCommand": "julia -e 'using Pluto; Pluto.run()'"
+    "postAttachCommand": "julia -e 'using Pluto; Pluto.run(Pluto.Configuration.Options(; security=Pluto.Configuration.SecurityOptions(; require_secret_for_open_links=false, require_secret_for_access=false)))'"
 
 }
