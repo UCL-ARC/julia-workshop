@@ -39,7 +39,7 @@ using PlutoUI
 md"""
 # Projectile motion with Julia
 
-## Ideal projectile (no mass, no air drag)
+## Ideal projectile (no air resistance)
 
 $(Resource("https://upload.wikimedia.org/wikipedia/commons/8/8f/Moto_parabolico.png"))
 
@@ -96,14 +96,14 @@ end
 md"""
 ### Find condition for maximum range of projectile
 
-It can be proved the range of the projectile $d$ is given by the formula:
+[It can be derived](https://en.wikipedia.org/wiki/Range_of_a_projectile#Flat_ground) that the range of the projectile $d$ is given by the formula:
 
 ```math
 d = \frac{v_0^2 \sin(2\theta)}{\lvert{}g\rvert{}}
 ```
 
 We want to find the condition under which the range of the projectile is maximum.
-We can observe $d$ increases monotocally with the initial speed $v_0$, but the relation with $\theta$ is (slightly!) more complicated, so we can write some code to find the value of $\theta$ which maximises the range.
+We can observe $d$ increases monotonically with the initial speed $v_0$, but the relation with $\theta$ is (slightly!) more complicated, so we can write some code to find the value of $\theta$ which maximises the range.
 To do this, we'll use a package for [numerical optimisation](https://en.wikipedia.org/wiki/Mathematical_optimization) called [`Optim.jl`](https://github.com/JuliaNLSolvers/Optim.jl).
 """
 
@@ -123,8 +123,8 @@ total_distance(v₀, θ, g) = ustrip(u"m", v₀ ^ 2 * sin(2 * θ) / abs(g))
 # ╔═╡ 8dfeac4b-47f5-4e7a-a34b-0976ae60304a
 md"""
 The `optimize` function from `Optmi.jl` tries to _minimise_ the value of the objective function passed as input, but in our case we want to find when `total_distance` is _maximum_, to do this we'll try to minimise the function `-total_distance`.
-Also, we want to variate only the launch angle $\theta$ while keeping the other paramaters fixed, to do this we can write an anonymous function with the `->` syntax.
-Finally, note that the [`Optim.jl` API](https://julianlsolvers.github.io/Optim.jl/stable/user/minimization/) expects the objective function to take a _vector_ of parameters as only input argument, even if it is only one, so we'll write the anonymous function keeping in mind that (always read the documentation!).
+Also, we want to vary only the launch angle $\theta$ while keeping the other paramaters fixed, to do this we can write an anonymous function with the `->` syntax.
+Finally, note that the [`Optim.jl` API](https://julianlsolvers.github.io/Optim.jl/stable/user/minimization/) expects the objective function to take a _vector_ of parameters as the only input argument, even if it is only one, so we'll write the anonymous function keeping this in mind (always read the documentation!).
 """
 
 # ╔═╡ 4775cb36-5991-4ef5-a150-cb614caf8326
@@ -135,7 +135,7 @@ result = optimize(θ -> -total_distance(v₀, θ[1], g), [1.0], minim_algorithm(
 
 # ╔═╡ 48ce8d19-e01d-4894-8441-5eaca0c675a2
 md"""
-The value of the initial $\theta$ which maximise the range of the projectile is thus
+The value of the initial $\theta$ which maximises the range of the projectile is thus
 """
 
 # ╔═╡ 36cd06ae-f7fc-4775-ba15-57bf1fcdc709
