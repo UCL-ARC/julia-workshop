@@ -14,9 +14,6 @@ macro bind(def, element)
     end
 end
 
-# ╔═╡ dc860b9f-bceb-4c19-8675-aaa43ccf3536
-using DataFrames
-
 # ╔═╡ bafcc8b1-2519-4dc3-837b-e65fa36cbfef
 using Plots
 
@@ -28,6 +25,12 @@ using Unitful
 
 # ╔═╡ 15b99748-69eb-4789-b9e8-243a97f3a36e
 using Optim
+
+# ╔═╡ dc860b9f-bceb-4c19-8675-aaa43ccf3536
+using DataFrames
+
+# ╔═╡ 4cb5a162-2f49-4569-9093-bb1e1d3024a4
+using LsqFit
 
 # ╔═╡ 0b299610-118d-4bcb-8b74-b4bc4f2ebe46
 using PlutoUI
@@ -57,6 +60,9 @@ displacement_y(t, v₀, θ, g) = v₀ * t * sin(θ) - (g * t ^ 2) / 2
 # ╔═╡ 08be6ab3-9ef3-442c-bd23-97aa68efad92
 plotlyjs()
 
+# ╔═╡ 171d9bc1-6d38-4064-93a2-7e2224ab6c72
+max_time(v₀, θ, g) = 2 * v₀ * sin(θ) / g
+
 # ╔═╡ 33367bb4-c7d7-4011-9195-1c7b0719ec26
 g = 9.81 * u"m/s^2"
 
@@ -70,7 +76,7 @@ v₀ = tmp_v₀ * u"m/s"
 @bind θ Slider(range(; start=0, stop=pi/2, length=101); show_value=true, default=pi/4)
 
 # ╔═╡ 16f4e440-a59c-4267-8d9f-58f8c25cf7b2
-total_t_range = range(; start=0.0 * u"s", stop=2 * v₀ * sin(θ) / g, length=100)
+total_t_range = range(; start=0.0 * u"s", stop=max_time(v₀, θ, g), length=100)
 
 # ╔═╡ 6ec5e4ea-7b18-400f-b417-fffbb74415cd
 @bind t Slider(1:1:100; default=90, show_value=true)
@@ -86,27 +92,110 @@ let
 	)
 end
 
+# ╔═╡ a34cdc3d-3d38-44ca-9835-7db8b451a468
+md"""
+### Find condition for maximum range of projectile
+
+It can be proved the range of the projectile $d$ is given by the formula:
+
+```math
+d = \frac{v_0^2 \sin(2\theta)}{\lvert{}g\rvert{}}
+```
+
+We want to find the condition under which the range of the projectile is maximum.
+We can observe $d$ increases monotocally with the initial speed $v_0$, but the relation with $\theta$ is (slightly!) more complicated, so we can write some code to find the value of $\theta$ which maximises the range.
+To do this, we'll use a package for [numerical optimisation](https://en.wikipedia.org/wiki/Mathematical_optimization) called [`Optim.jl`](https://github.com/JuliaNLSolvers/Optim.jl).
+"""
+
+# ╔═╡ d2c5fbe4-a364-4f48-919c-bc192cc01af4
+md"""
+Let's define the function `total_distance` which represents the range of the projectile as a function of initial speed $v_0$, launch angle $\theta$ and acceleration of gravity $g$
+
+!!! warning "Units in Optim.jl"
+
+	Due to the complexity of the operations performed internally, `Optim.jl` doesn't guarantee dimensional consistency of its operations, and as such it isn't compatible with `Unitful.jl` or other unit-checking packages.
+	We will have to strip the units, in meters, from the return value of `total_distance`.
+"""
+
 # ╔═╡ 8cc58d50-40e7-4ac5-81ed-6ce2a02d9d3c
 total_distance(v₀, θ, g) = ustrip(u"m", v₀ ^ 2 * sin(2 * θ) / abs(g))
 
-# ╔═╡ c139e332-91df-43da-b24e-63840250f722
-total_distance(v₀, θ, g)
+# ╔═╡ 8dfeac4b-47f5-4e7a-a34b-0976ae60304a
+md"""
+The `optimize` function from `Optmi.jl` tries to _minimise_ the value of the objective function passed as input, but in our case we want to find when `total_distance` is _maximum_, to do this we'll try to minimise the function `-total_distance`.
+Also, we want to variate only the launch angle $\theta$ while keeping the other paramaters fixed, to do this we can write an anonymous function with the `->` syntax.
+Finally, note that the [`Optim.jl` API](https://julianlsolvers.github.io/Optim.jl/stable/user/minimization/) expects the objective function to take a _vector_ of parameters as only input argument, even if it is only one, so we'll write the anonymous function keeping in mind that (always read the documentation!).
+"""
+
+# ╔═╡ 4775cb36-5991-4ef5-a150-cb614caf8326
+@bind minim_algorithm Select([NelderMead, SimulatedAnnealing, BFGS, LBFGS, ConjugateGradient, GradientDescent, MomentumGradientDescent, AcceleratedGradientDescent, Newton, NewtonTrustRegion]; default=BFGS)
 
 # ╔═╡ c58d3cfb-a234-44cd-89b8-1cb072b84c26
-result = optimize(θ -> -total_distance(v₀, θ[1], g), [1.0], LBFGS()) # we want to maximise the total distance!
+result = optimize(θ -> -total_distance(v₀, θ[1], g), [1.0], minim_algorithm()) # we want to maximise the total distance!
+
+# ╔═╡ 48ce8d19-e01d-4894-8441-5eaca0c675a2
+md"""
+The value of the initial $\theta$ which maximise the range of the projectile is thus
+"""
 
 # ╔═╡ 36cd06ae-f7fc-4775-ba15-57bf1fcdc709
 Optim.minimizer(result)[1]
+
+# ╔═╡ 1722c037-2231-4d0a-ad16-8a63ec374046
+md"""
+or $\theta = \pi/4 = 45\degree$.
+Play with the slider of `θ` above to verify this result.
+
+### Dealing with data
+"""
+
+# ╔═╡ 82228247-05a0-40be-b42a-4b1338c18b8b
+data = let
+	v₀ = rand() * 10 * u"m/s"
+	θ = rand() * pi/2
+	t_range = range(; start=0u"s", stop=max_time(v₀, θ, g), length=25)
+
+	# Some quantities to modulate the random noise
+	max_height = v₀ ^ 2 * sin(θ) ^ 2 / (2 * abs(g))
+	d = total_distance(v₀, θ, g) * u"m"
+
+	# Generate the random data 
+	x = displacement_x.(t_range, v₀, θ, g) .+ randn.() .* (max_height / 100)
+	y = displacement_y.(t_range, v₀, θ, g) .+ randn.() .* (d / 100)
+
+	# Save in a dataframe
+	DataFrame(:t => t_range, :x => x, :y => y)
+end
+
+# ╔═╡ ee419b81-f381-41d3-bbf1-37b16a4bc0cc
+scatter(data.x, data.y;
+	label="",
+	xlabel="x",
+	ylabel="y",
+)
+
+# ╔═╡ 5368ecc6-d37b-4d88-8fd6-c5fa78da92d1
+best_fit = curve_fit((t, p) -> ustrip(displacement_y.(t, p[1], p[2], ustrip(g))), ustrip.(data.t), ustrip.(data.y), [0.5, 0.5])
+
+# ╔═╡ 4a50cea7-f0eb-4a16-bcf2-522753f5712b
+let
+	plot(ustrip.(displacement_y.(ustrip.(data.t), best_fit.param[1], best_fit.param[2], ustrip.(g))); label="best model")
+	scatter!(ustrip.(data.y); label="data")
+end
 
 # ╔═╡ 490efc11-a562-4042-bec6-60b6256c2002
 md"""
 ## Notebook setup
 """
 
+# ╔═╡ 67d426e1-5985-4e9a-99cd-b9fae9e0abf1
+PlutoUI.TableOfContents(; include_definitions=false)
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+LsqFit = "2fda8390-95c7-5789-9bda-21331edee243"
 Optim = "429524aa-4258-5aef-a3af-852621145aeb"
 PlotlyJS = "f0f68f2c-4968-5e81-91da-67840de0976a"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
@@ -115,6 +204,7 @@ Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
 DataFrames = "~1.6.1"
+LsqFit = "~0.15.0"
 Optim = "~1.9.4"
 PlotlyJS = "~0.18.13"
 Plots = "~1.39.0"
@@ -128,7 +218,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.10.3"
 manifest_format = "2.0"
-project_hash = "78552bfadc7236936e8d1aa22604806580bb197c"
+project_hash = "94db719c251206433b734ab76362be5449b8b2c2"
 
 [[deps.AbstractPlutoDingetjes]]
 deps = ["Pkg"]
@@ -147,6 +237,12 @@ version = "4.0.4"
 
     [deps.Adapt.weakdeps]
     StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
+[[deps.AliasTables]]
+deps = ["PtrArrays", "Random"]
+git-tree-sha1 = "9876e1e164b144ca45e9e3198d0b689cadfed9ff"
+uuid = "66dad0bd-aa9a-41b7-9441-69ab47430ed8"
+version = "1.1.3"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
@@ -214,6 +310,12 @@ deps = ["Artifacts", "Bzip2_jll", "CompilerSupportLibraries_jll", "Fontconfig_jl
 git-tree-sha1 = "4b859a208b2397a7a623a03449e4636bdb17bcf2"
 uuid = "83423d85-b0ee-5818-9007-b63ccbeb887a"
 version = "1.16.1+1"
+
+[[deps.Calculus]]
+deps = ["LinearAlgebra"]
+git-tree-sha1 = "f641eb0a4f00c343bbc32346e1217b86f3ce9dad"
+uuid = "49dc2e85-a5d0-5ad3-a950-438e2897f1b9"
+version = "0.5.1"
 
 [[deps.CodecZlib]]
 deps = ["TranscodingStreams", "Zlib_jll"]
@@ -348,6 +450,22 @@ version = "1.15.1"
 deps = ["Random", "Serialization", "Sockets"]
 uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
+[[deps.Distributions]]
+deps = ["AliasTables", "FillArrays", "LinearAlgebra", "PDMats", "Printf", "QuadGK", "Random", "SpecialFunctions", "Statistics", "StatsAPI", "StatsBase", "StatsFuns"]
+git-tree-sha1 = "22c595ca4146c07b16bcf9c8bea86f731f7109d2"
+uuid = "31c24e10-a181-5473-b8eb-7969acd0382f"
+version = "0.25.108"
+
+    [deps.Distributions.extensions]
+    DistributionsChainRulesCoreExt = "ChainRulesCore"
+    DistributionsDensityInterfaceExt = "DensityInterface"
+    DistributionsTestExt = "Test"
+
+    [deps.Distributions.weakdeps]
+    ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
+    DensityInterface = "b429d917-457f-4dbc-8f4c-0cc954292b1d"
+    Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
 [[deps.DocStringExtensions]]
 deps = ["LibGit2"]
 git-tree-sha1 = "2fb1e02f2b635d0845df5d7c167fec4dd739b00d"
@@ -358,6 +476,12 @@ version = "0.9.3"
 deps = ["ArgTools", "FileWatching", "LibCURL", "NetworkOptions"]
 uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 version = "1.6.0"
+
+[[deps.DualNumbers]]
+deps = ["Calculus", "NaNMath", "SpecialFunctions"]
+git-tree-sha1 = "5837a837389fccf076445fce071c8ddaea35a566"
+uuid = "fa6b7ba4-c1ee-5f82-b5fc-ecf0adba8f74"
+version = "0.6.8"
 
 [[deps.EpollShim_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
@@ -397,16 +521,12 @@ deps = ["LinearAlgebra"]
 git-tree-sha1 = "0653c0a2396a6da5bc4766c43041ef5fd3efbe57"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
 version = "1.11.0"
+weakdeps = ["PDMats", "SparseArrays", "Statistics"]
 
     [deps.FillArrays.extensions]
     FillArraysPDMatsExt = "PDMats"
     FillArraysSparseArraysExt = "SparseArrays"
     FillArraysStatisticsExt = "Statistics"
-
-    [deps.FillArrays.weakdeps]
-    PDMats = "90014a1f-27ba-587c-ab20-58faa44d9150"
-    SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
-    Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [[deps.FiniteDiff]]
 deps = ["ArrayInterface", "LinearAlgebra", "Requires", "Setfield", "SparseArrays"]
@@ -534,6 +654,12 @@ deps = ["MacroTools", "Test"]
 git-tree-sha1 = "6187bb2d5fcbb2007c39e7ac53308b0d371124bd"
 uuid = "9fb69e20-1954-56bb-a84f-559cc56a8ff7"
 version = "0.2.2"
+
+[[deps.HypergeometricFunctions]]
+deps = ["DualNumbers", "LinearAlgebra", "OpenLibm_jll", "SpecialFunctions"]
+git-tree-sha1 = "f218fe3736ddf977e0e772bc9a586b2383da2685"
+uuid = "34004b35-14d8-5ef3-9330-4cdb6864b03a"
+version = "0.3.23"
 
 [[deps.Hyperscript]]
 deps = ["Test"]
@@ -773,6 +899,12 @@ git-tree-sha1 = "c1dd6d7978c12545b4179fb6153b9250c96b0075"
 uuid = "e6f89c97-d47a-5376-807f-9c37f3926c36"
 version = "1.0.3"
 
+[[deps.LsqFit]]
+deps = ["Distributions", "ForwardDiff", "LinearAlgebra", "NLSolversBase", "Printf", "StatsAPI"]
+git-tree-sha1 = "40acc20cfb253cf061c1a2a2ea28de85235eeee1"
+uuid = "2fda8390-95c7-5789-9bda-21331edee243"
+version = "0.15.0"
+
 [[deps.MIMEs]]
 git-tree-sha1 = "65f28ad4b594aebe22157d6fac869786a255b7eb"
 uuid = "6c6e2e6c-3030-632d-7369-2d6c69616d65"
@@ -912,6 +1044,12 @@ deps = ["Artifacts", "Libdl"]
 uuid = "efcefdf7-47ab-520b-bdef-62a2eaa19f15"
 version = "10.42.0+1"
 
+[[deps.PDMats]]
+deps = ["LinearAlgebra", "SparseArrays", "SuiteSparse"]
+git-tree-sha1 = "949347156c25054de2db3b166c52ac4728cbad65"
+uuid = "90014a1f-27ba-587c-ab20-58faa44d9150"
+version = "0.11.31"
+
 [[deps.Parameters]]
 deps = ["OrderedCollections", "UnPack"]
 git-tree-sha1 = "34c0e9ad262e5f7fc75b10a9952ca7692cfc5fbe"
@@ -1048,11 +1186,22 @@ version = "2.3.1"
 deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
+[[deps.PtrArrays]]
+git-tree-sha1 = "077664975d750757f30e739c870fbbdc01db7913"
+uuid = "43287f4e-b6f4-7ad1-bb20-aadabca52c3d"
+version = "1.1.0"
+
 [[deps.Qt6Base_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Fontconfig_jll", "Glib_jll", "JLLWrappers", "Libdl", "Libglvnd_jll", "OpenSSL_jll", "Vulkan_Loader_jll", "Xorg_libSM_jll", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Xorg_libxcb_jll", "Xorg_xcb_util_cursor_jll", "Xorg_xcb_util_image_jll", "Xorg_xcb_util_keysyms_jll", "Xorg_xcb_util_renderutil_jll", "Xorg_xcb_util_wm_jll", "Zlib_jll", "libinput_jll", "xkbcommon_jll"]
 git-tree-sha1 = "37b7bb7aabf9a085e0044307e1717436117f2b3b"
 uuid = "c0090381-4147-56d7-9ebc-da0b1113ec56"
 version = "6.5.3+1"
+
+[[deps.QuadGK]]
+deps = ["DataStructures", "LinearAlgebra"]
+git-tree-sha1 = "9b23c31e76e333e6fb4c1595ae6afa74966a729e"
+uuid = "1fd47b50-473d-5c70-9696-f719f8f3bcdc"
+version = "2.9.4"
 
 [[deps.REPL]]
 deps = ["InteractiveUtils", "Markdown", "Sockets", "Unicode"]
@@ -1090,6 +1239,18 @@ deps = ["UUIDs"]
 git-tree-sha1 = "838a3a4188e2ded87a4f9f184b4b0d78a1e91cb7"
 uuid = "ae029012-a4dd-5104-9daa-d747884805df"
 version = "1.3.0"
+
+[[deps.Rmath]]
+deps = ["Random", "Rmath_jll"]
+git-tree-sha1 = "f65dcb5fa46aee0cf9ed6274ccbd597adc49aa7b"
+uuid = "79098fc4-a85e-5d69-aa6a-4863f24498fa"
+version = "0.7.1"
+
+[[deps.Rmath_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl"]
+git-tree-sha1 = "d483cd324ce5cf5d61b77930f0bbd6cb61927d21"
+uuid = "f50d1b31-88e8-58de-be2c-1cc44531875f"
+version = "0.4.2+0"
 
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
@@ -1174,6 +1335,20 @@ deps = ["DataAPI", "DataStructures", "LinearAlgebra", "LogExpFunctions", "Missin
 git-tree-sha1 = "1d77abd07f617c4868c33d4f5b9e1dbb2643c9cf"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 version = "0.34.2"
+
+[[deps.StatsFuns]]
+deps = ["HypergeometricFunctions", "IrrationalConstants", "LogExpFunctions", "Reexport", "Rmath", "SpecialFunctions"]
+git-tree-sha1 = "cef0472124fab0695b58ca35a77c6fb942fdab8a"
+uuid = "4c63d2b9-4356-54db-8cca-17b64c39e42c"
+version = "1.3.1"
+
+    [deps.StatsFuns.extensions]
+    StatsFunsChainRulesCoreExt = "ChainRulesCore"
+    StatsFunsInverseFunctionsExt = "InverseFunctions"
+
+    [deps.StatsFuns.weakdeps]
+    ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
+    InverseFunctions = "3587e190-3f89-42d0-90ee-14403ec27112"
 
 [[deps.StringManipulation]]
 deps = ["PrecompileTools"]
@@ -1597,11 +1772,11 @@ version = "1.4.1+1"
 # ╟─9ff517e2-d978-4b52-ac09-3dc16b222d11
 # ╠═2068fa89-94d4-4b8d-802b-aa06258e1f90
 # ╠═06de99b9-46fa-4f2a-bdf3-4bcc12f89d0c
-# ╠═dc860b9f-bceb-4c19-8675-aaa43ccf3536
 # ╠═bafcc8b1-2519-4dc3-837b-e65fa36cbfef
 # ╠═74266685-f5c4-4b19-ab58-1dc890f885c5
 # ╠═48cc1cbf-91b0-424a-8645-035cd40c194a
 # ╠═08be6ab3-9ef3-442c-bd23-97aa68efad92
+# ╠═171d9bc1-6d38-4064-93a2-7e2224ab6c72
 # ╠═33367bb4-c7d7-4011-9195-1c7b0719ec26
 # ╟─4f22a3c0-bdb6-415b-87bf-f8775eafa49a
 # ╟─ebf792fa-6cfe-4e43-b50c-800afa835e3f
@@ -1609,12 +1784,24 @@ version = "1.4.1+1"
 # ╟─16f4e440-a59c-4267-8d9f-58f8c25cf7b2
 # ╠═6ec5e4ea-7b18-400f-b417-fffbb74415cd
 # ╟─48d63c64-dee4-47a8-87df-8db849cdc18d
+# ╟─a34cdc3d-3d38-44ca-9835-7db8b451a468
 # ╠═15b99748-69eb-4789-b9e8-243a97f3a36e
+# ╟─d2c5fbe4-a364-4f48-919c-bc192cc01af4
 # ╠═8cc58d50-40e7-4ac5-81ed-6ce2a02d9d3c
-# ╠═c139e332-91df-43da-b24e-63840250f722
+# ╟─8dfeac4b-47f5-4e7a-a34b-0976ae60304a
+# ╟─4775cb36-5991-4ef5-a150-cb614caf8326
 # ╠═c58d3cfb-a234-44cd-89b8-1cb072b84c26
+# ╟─48ce8d19-e01d-4894-8441-5eaca0c675a2
 # ╠═36cd06ae-f7fc-4775-ba15-57bf1fcdc709
+# ╟─1722c037-2231-4d0a-ad16-8a63ec374046
+# ╠═dc860b9f-bceb-4c19-8675-aaa43ccf3536
+# ╠═82228247-05a0-40be-b42a-4b1338c18b8b
+# ╟─ee419b81-f381-41d3-bbf1-37b16a4bc0cc
+# ╠═4cb5a162-2f49-4569-9093-bb1e1d3024a4
+# ╠═5368ecc6-d37b-4d88-8fd6-c5fa78da92d1
+# ╟─4a50cea7-f0eb-4a16-bcf2-522753f5712b
 # ╟─490efc11-a562-4042-bec6-60b6256c2002
 # ╠═0b299610-118d-4bcb-8b74-b4bc4f2ebe46
+# ╠═67d426e1-5985-4e9a-99cd-b9fae9e0abf1
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
