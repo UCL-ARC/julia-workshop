@@ -37,8 +37,29 @@ using PlutoUI
 
 # ╔═╡ 9ff517e2-d978-4b52-ac09-3dc16b222d11
 md"""
-# Projectile motion with Julia
+# Scientific computing with Julia
 
+## Reproducibility by default
+
+$(Resource("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4544406/bin/f1000research-4-7374-g0000.jpg"))
+
+_Image by Paul Blow in article ["Reproducibility: The risks of replication drive"](https://doi.org/10.1038/503333a) by Mina Bissel, Nature, 2013._
+
+Julia is an interactive programming language, much like Python and R, and can be used in notebooks for exploratory work or data science workflows.
+It can be used in Jupyter notebooks (the "Ju" in the name stands for "Julia"!) via the [`IJulia.jl`](https://github.com/JuliaLang/IJulia.jl) kernel, but here we want to demonstrate [`Pluto.jl`](https://github.com/fonsp/Pluto.jl) 🎈, an alternative type of notebook with focus on reproducibility.
+Pluto has a tight integration with the Julia package manager, to make sure the notebook you run locally will use the same set packages on someone else's machine, and it is _reactive_, which means that interdependent cells are automatically updated, much like a spreadsheet.
+You can also use widgets to set the value of variables.
+"""
+
+# ╔═╡ 64a8c492-f6cd-4b31-b200-f15210fdc6af
+a = 2
+# @bind a Slider(0:10; show_value=true, default=2)
+
+# ╔═╡ ef5fe3c7-d01d-48de-a9c5-1010d8c75f5e
+b = a ^ 2
+
+# ╔═╡ b2f7edec-14d9-4011-8d84-8fc65fd0d266
+md"""
 ## Ideal projectile (no air resistance)
 
 $(Resource("https://upload.wikimedia.org/wikipedia/commons/8/8f/Moto_parabolico.png"))
@@ -186,6 +207,8 @@ end
 # ╔═╡ 490efc11-a562-4042-bec6-60b6256c2002
 md"""
 ## Notebook setup
+
+This section is not very interesting, it contains only some setup code for this notebook.
 """
 
 # ╔═╡ 67d426e1-5985-4e9a-99cd-b9fae9e0abf1
@@ -1770,6 +1793,9 @@ version = "1.4.1+1"
 
 # ╔═╡ Cell order:
 # ╟─9ff517e2-d978-4b52-ac09-3dc16b222d11
+# ╠═64a8c492-f6cd-4b31-b200-f15210fdc6af
+# ╠═ef5fe3c7-d01d-48de-a9c5-1010d8c75f5e
+# ╟─b2f7edec-14d9-4011-8d84-8fc65fd0d266
 # ╠═2068fa89-94d4-4b8d-802b-aa06258e1f90
 # ╠═06de99b9-46fa-4f2a-bdf3-4bcc12f89d0c
 # ╠═bafcc8b1-2519-4dc3-837b-e65fa36cbfef
