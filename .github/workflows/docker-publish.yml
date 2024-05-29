@@ -94,6 +94,10 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
+          # Note: building only for `linux/amd64` takes about 5 minutes, building also for
+          # `linux/arm64` takes about 40 minutes because QEMU is super slow.  If you're
+          # desperate about build times remove `linux/arm64`, but keep in mind the
+          # `linux/amd64` image won't work very well on Apple Silicon.
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
