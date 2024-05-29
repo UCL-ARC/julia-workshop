@@ -124,7 +124,7 @@ d = \frac{v_0^2 \sin(2\theta)}{\lvert{}g\rvert{}}
 ```
 
 We want to find the condition under which the range of the projectile is maximum.
-We can observe $d$ increases monotonically with the initial speed $v_0$, but the relation with $\theta$ is (slightly!) more complicated, so we can write some code to find the value of $\theta$ which maximises the range.
+We can observe $d$ increases monotonically with the initial speed $v_0$, but the relation with $\theta$ is (slightly!) more complicated, so we can write some code to find the value of $\theta$ which maximizes the range.
 To do this, we'll use a package for [numerical optimisation](https://en.wikipedia.org/wiki/Mathematical_optimization) called [`Optim.jl`](https://github.com/JuliaNLSolvers/Optim.jl).
 """
 
@@ -143,7 +143,7 @@ total_distance(v₀, θ, g) = ustrip(u"m", v₀ ^ 2 * sin(2 * θ) / abs(g))
 
 # ╔═╡ 8dfeac4b-47f5-4e7a-a34b-0976ae60304a
 md"""
-The `optimize` function from `Optmi.jl` tries to _minimise_ the value of the objective function passed as input, but in our case we want to find when `total_distance` is _maximum_, to do this we'll try to minimise the function `-total_distance`.
+The `optimize` function from `Optmi.jl` tries to _minimize_ the value of the objective function passed as input, but in our case we want to find when `total_distance` is _maximum_, to do this we'll try to minimize the function `-total_distance`.
 Also, we want to vary only the launch angle $\theta$ while keeping the other paramaters fixed, to do this we can write an anonymous function with the `->` syntax.
 Finally, note that the [`Optim.jl` API](https://julianlsolvers.github.io/Optim.jl/stable/user/minimization/) expects the objective function to take a _vector_ of parameters as the only input argument, even if it is only one, so we'll write the anonymous function keeping this in mind (always read the documentation!).
 """
@@ -152,11 +152,11 @@ Finally, note that the [`Optim.jl` API](https://julianlsolvers.github.io/Optim.j
 @bind minim_algorithm Select([NelderMead, SimulatedAnnealing, BFGS, LBFGS, ConjugateGradient, GradientDescent, MomentumGradientDescent, AcceleratedGradientDescent, Newton, NewtonTrustRegion]; default=BFGS)
 
 # ╔═╡ c58d3cfb-a234-44cd-89b8-1cb072b84c26
-result = optimize(θ -> -total_distance(v₀, θ[1], g), [1.0], minim_algorithm()) # we want to maximise the total distance!
+result = optimize(θ -> -total_distance(v₀, θ[1], g), [1.0], minim_algorithm()) # we want to maximize the total distance!
 
 # ╔═╡ 48ce8d19-e01d-4894-8441-5eaca0c675a2
 md"""
-The value of the initial $\theta$ which maximises the range of the projectile is thus
+The value of the initial $\theta$ which maximizes the range of the projectile is thus
 """
 
 # ╔═╡ 36cd06ae-f7fc-4775-ba15-57bf1fcdc709
