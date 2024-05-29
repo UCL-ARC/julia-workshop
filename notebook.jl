@@ -39,6 +39,48 @@ using PlutoUI
 md"""
 # Scientific computing with Julia
 
+## What's Julia?
+
+Julia is a modern, dynamic, general-purpose, compiled programming language.
+It's interactive ("like Python"), can be used in a REPL or notebooks, like Jupyter (it's the "Ju") or Pluto (this one🎈).
+Julia has a runtime which includes a just-in-time (JIT) compiler and a garbage collector (GC), for automatic memory management.
+
+Julia is mainly used for numerical computing, diffential equations solvers suite is quite popular.
+
+Main paradigm of Julia is multiple dispatch, what functions do depend on type and number of _all_ arguments.
+
+### Why Julia?
+
+From "[My Target Audience](https://scientificcoder.com/my-target-audience)" by Matthijs Cox:
+
+$(Resource("https://cdn.hashnode.com/res/hashnode/image/upload/v1681735971356/91b6e886-7ce1-41a3-9d9f-29b7b096e7f2.png"))
+$(Resource("https://cdn.hashnode.com/res/hashnode/image/upload/v1681735992315/62fdd58f-4630-4120-8eb4-5238740543e8.png"))
+
+### Julia can be fast
+
+!!! warning "TODO"
+
+    Add figures from <https://github.com/carstenbauer/JuliaUCL24/blob/main/presentation/intro_juliahpc_ucl.pdf>
+
+### Productivity
+
+$(Resource("https://i.imgur.com/Ym5H0Pz.jpeg"))
+$(Resource("https://i.imgur.com/KZMZSru.jpeg"))
+from <https://twitter.com/ChapelLanguage/status/1623389242822111232>
+
+### Summary
+
+* Explorable & Understandable
+* Composability thanks to multiple dispatch (ask me more about this at the end!)
+* User-defined types are as fast and compact as built-ins
+* Code that is close to the mathematics
+* No need to switch languages for performance...
+* ...but you can still call C-like shared libraries with simple Foreign Function Interface (FFI) if you want to
+* Built-in package manager
+* Most packages are written in Julia: end users and software developers talk the same language
+* MIT licensed: free and open source
+
+
 ## Pluto: reproducibility by default
 
 $(Resource("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4544406/bin/f1000research-4-7374-g0000.jpg"))
@@ -67,14 +109,14 @@ To achieve this, Pluto creates a virtual environment under the hood, but wheneve
 
 # ╔═╡ b2f7edec-14d9-4011-8d84-8fc65fd0d266
 md"""
-## Ideal projectile (no air resistance)
+## Hands-on tutorial: ideal projectile (no air resistance)
 
 !!! note
 
     With this tutorial we want to give you a taste of what you can do with Julia: numerical computation, plotting, data wrangling, etc.
     However this is _not_ a full introductory course to this programming language.
 
-For this hands-on we will study the [motion of an ideal projectile](https://en.wikipedia.org/wiki/Projectile_motion).
+For this hands-on we will study the [motion of an ideal projectile](https://en.wikipedia.org/wiki/Projectile_motion), without air resistance or any other complication.
 
 $(Resource("https://upload.wikimedia.org/wikipedia/commons/8/8f/Moto_parabolico.png"))
 
@@ -138,8 +180,13 @@ v₀ = tmp_v₀ * u"m/s"
 # ╔═╡ 16f4e440-a59c-4267-8d9f-58f8c25cf7b2
 total_t_range = range(; start=0.0 * u"s", stop=time_of_flight(v₀, θ, g), length=100)
 
+# ╔═╡ 8ad79456-9bfb-4e4a-89f0-0df46775432d
+md"""
+Move the following slider to see fewer or more points in the plot below.
+"""
+
 # ╔═╡ 6ec5e4ea-7b18-400f-b417-fffbb74415cd
-@bind t Slider(1:1:100; default=90, show_value=true)
+@bind t Slider(1:1:length(total_t_range); default=90, show_value=true)
 
 # ╔═╡ 48d63c64-dee4-47a8-87df-8db849cdc18d
 let
@@ -1861,7 +1908,7 @@ version = "1.4.1+1"
 """
 
 # ╔═╡ Cell order:
-# ╟─9ff517e2-d978-4b52-ac09-3dc16b222d11
+# ╠═9ff517e2-d978-4b52-ac09-3dc16b222d11
 # ╠═64a8c492-f6cd-4b31-b200-f15210fdc6af
 # ╠═ef5fe3c7-d01d-48de-a9c5-1010d8c75f5e
 # ╟─4f425f14-e2ec-4b5c-a2d2-f5614da38c7a
@@ -1881,6 +1928,7 @@ version = "1.4.1+1"
 # ╟─ebf792fa-6cfe-4e43-b50c-800afa835e3f
 # ╠═ab591e9d-c2f0-430a-a06d-c86d67e54ec9
 # ╟─16f4e440-a59c-4267-8d9f-58f8c25cf7b2
+# ╟─8ad79456-9bfb-4e4a-89f0-0df46775432d
 # ╠═6ec5e4ea-7b18-400f-b417-fffbb74415cd
 # ╟─48d63c64-dee4-47a8-87df-8db849cdc18d
 # ╟─a34cdc3d-3d38-44ca-9835-7db8b451a468
