@@ -14,14 +14,14 @@ macro bind(def, element)
     end
 end
 
-# ╔═╡ bafcc8b1-2519-4dc3-837b-e65fa36cbfef
-using Plots
-
-# ╔═╡ 74266685-f5c4-4b19-ab58-1dc890f885c5
-using PlotlyJS: PlotlyJS
-
 # ╔═╡ 48cc1cbf-91b0-424a-8645-035cd40c194a
 using Unitful
+
+# ╔═╡ bafcc8b1-2519-4dc3-837b-e65fa36cbfef
+using Plots # main plotting package
+
+# ╔═╡ 74266685-f5c4-4b19-ab58-1dc890f885c5
+using PlotlyJS: PlotlyJS # provides an interactive backend for web browsers
 
 # ╔═╡ 15b99748-69eb-4789-b9e8-243a97f3a36e
 using Optim
@@ -39,7 +39,7 @@ using PlutoUI
 md"""
 # Scientific computing with Julia
 
-## Reproducibility by default
+## Pluto: reproducibility by default
 
 $(Resource("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4544406/bin/f1000research-4-7374-g0000.jpg"))
 
@@ -47,7 +47,8 @@ _Image by Paul Blow in article ["Reproducibility: The risks of replication drive
 
 Julia is an interactive programming language, much like Python and R, and can be used in notebooks for exploratory work or data science workflows.
 It can be used in Jupyter notebooks (the "Ju" in the name stands for "Julia"!) via the [`IJulia.jl`](https://github.com/JuliaLang/IJulia.jl) kernel, but here we want to demonstrate [`Pluto.jl`](https://github.com/fonsp/Pluto.jl) 🎈, an alternative type of notebook with focus on reproducibility.
-Pluto has a tight integration with the Julia package manager, to make sure the notebook you run locally will use the same set packages on someone else's machine, and it is _reactive_, which means that interdependent cells are automatically updated, much like a spreadsheet.
+
+Pluto is _reactive_, which means that interdependent cells are automatically updated, much like a spreadsheet.
 You can also use widgets to set the value of variables.
 """
 
@@ -58,18 +59,53 @@ a = 2
 # ╔═╡ ef5fe3c7-d01d-48de-a9c5-1010d8c75f5e
 b = a ^ 2
 
+# ╔═╡ 4f425f14-e2ec-4b5c-a2d2-f5614da38c7a
+md"""
+Pluto has also a tight integration with the Julia package manager, to make sure the notebook you run locally will use the same set packages on someone else's machine.
+To achieve this, Pluto creates a virtual environment under the hood, but whenever you use Julia outside of Pluto do remember to create a [local environment](https://pkgdocs.julialang.org/v1/environments/) for your projects!
+"""
+
 # ╔═╡ b2f7edec-14d9-4011-8d84-8fc65fd0d266
 md"""
 ## Ideal projectile (no air resistance)
 
+!!! note
+
+    With this tutorial we want to give you a taste of what you can do with Julia: numerical computation, plotting, data wrangling, etc.
+    However this is _not_ a full introductory course to this programming language.
+
+For this hands-on we will study the [motion of an ideal projectile](https://en.wikipedia.org/wiki/Projectile_motion).
+
 $(Resource("https://upload.wikimedia.org/wikipedia/commons/8/8f/Moto_parabolico.png"))
+
+The coordinates $$x$$ and $$y$$ of the projectile at time $$t$$, launched at time $$t = 0$$ from position $$(0,0)$$ with launch angle $$\theta$$ and initial speed with magnitude $$v_0$$ are given by the formulas:
+
 
 ```math
 \begin{aligned}
-x &= v_0 t \cos(\theta) \\
-y &= v_0 t \cos(\theta) - \frac{1}{2}gt^2
+x &= v_0 t \cos(\theta), \\
+y &= v_0 t \cos(\theta) - \frac{1}{2}gt^2.
 \end{aligned}
 ```
+
+Furthermore, the [time of flight](https://en.wikipedia.org/wiki/Projectile_motion#Time_of_flight_or_total_time_of_the_whole_journey) of the projectile (the time after which the projectile reaches again the ground, $$y = 0$$) is given by
+
+```math
+t = \frac{2v_0\sin(\theta)}{g}.
+```
+"""
+
+# ╔═╡ 4e81e65a-810e-4aa7-9fc2-2d8b3d0049d6
+md"""
+The constant $$g$$ is the [acceleration of gravity](https://en.wikipedia.org/wiki/Standard_gravity).  Let's set a Julia variable with value $$9.81~\mathrm{m}/\mathrm{s}^2$$:
+"""
+
+# ╔═╡ 33367bb4-c7d7-4011-9195-1c7b0719ec26
+g = 9.81 * u"m/s^2"
+
+# ╔═╡ bb56b280-ba25-43f7-9cc0-c9e3e66570df
+md"""
+Let's now define the functions for the coordinates $$x$$ and $$y$$, and the time of flight:
 """
 
 # ╔═╡ 2068fa89-94d4-4b8d-802b-aa06258e1f90
@@ -78,14 +114,17 @@ displacement_x(t, v₀, θ, g) = v₀ * t * cos(θ)
 # ╔═╡ 06de99b9-46fa-4f2a-bdf3-4bcc12f89d0c
 displacement_y(t, v₀, θ, g) = v₀ * t * sin(θ) - (g * t ^ 2) / 2
 
-# ╔═╡ 08be6ab3-9ef3-442c-bd23-97aa68efad92
-plotlyjs()
-
 # ╔═╡ 171d9bc1-6d38-4064-93a2-7e2224ab6c72
-max_time(v₀, θ, g) = 2 * v₀ * sin(θ) / g
+time_of_flight(v₀, θ, g) = 2 * v₀ * sin(θ) / g
 
-# ╔═╡ 33367bb4-c7d7-4011-9195-1c7b0719ec26
-g = 9.81 * u"m/s^2"
+# ╔═╡ 08be6ab3-9ef3-442c-bd23-97aa68efad92
+plotlyjs(); # enable the PlotlyJS backend
+
+# ╔═╡ cfddaa20-b7d7-4d96-9c89-9f3ade90b9a0
+md"""
+Finally, let's define the variables which represent the initial speed and launch angle of the projectile.
+We can use Pluto sliders for this, to more easily change their values
+"""
 
 # ╔═╡ 4f22a3c0-bdb6-415b-87bf-f8775eafa49a
 @bind tmp_v₀ Slider(0:0.1:10; show_value=true, default=5)
@@ -97,7 +136,7 @@ v₀ = tmp_v₀ * u"m/s"
 @bind θ Slider(range(; start=0, stop=pi/2, length=101); show_value=true, default=pi/4)
 
 # ╔═╡ 16f4e440-a59c-4267-8d9f-58f8c25cf7b2
-total_t_range = range(; start=0.0 * u"s", stop=max_time(v₀, θ, g), length=100)
+total_t_range = range(; start=0.0 * u"s", stop=time_of_flight(v₀, θ, g), length=100)
 
 # ╔═╡ 6ec5e4ea-7b18-400f-b417-fffbb74415cd
 @bind t Slider(1:1:100; default=90, show_value=true)
@@ -144,7 +183,7 @@ total_distance(v₀, θ, g) = ustrip(u"m", v₀ ^ 2 * sin(2 * θ) / abs(g))
 # ╔═╡ 8dfeac4b-47f5-4e7a-a34b-0976ae60304a
 md"""
 The `optimize` function from `Optmi.jl` tries to _minimize_ the value of the objective function passed as input, but in our case we want to find when `total_distance` is _maximum_, to do this we'll try to minimize the function `-total_distance`.
-Also, we want to vary only the launch angle $\theta$ while keeping the other paramaters fixed, to do this we can write an anonymous function with the `->` syntax.
+Also, we want to vary only the launch angle $\theta$ while keeping the other paramaters fixed, to do this we can write an [anonymous function](https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions) with the `->` syntax.
 Finally, note that the [`Optim.jl` API](https://julianlsolvers.github.io/Optim.jl/stable/user/minimization/) expects the objective function to take a _vector_ of parameters as the only input argument, even if it is only one, so we'll write the anonymous function keeping this in mind (always read the documentation!).
 """
 
@@ -168,19 +207,25 @@ or $\theta = \pi/4 = 45\degree$.
 Play with the slider of `θ` above to verify this result.
 
 ### Dealing with data
+
+In this section we want to have a look at the tools available in the Julia ecosystem that may be useful for data science.
+The reference package in this domain [`DataFrames.jl`](https://github.com/JuliaData/DataFrames.jl), which has similar functionalities to analogous packages in other packages like `data.frame` in R, or Pandas and Polars in Python.
+
+Let's generate a dataframe which contains the data of a simulated projectile trajectory.
+Columns represent the time `t`, and the corresponding coordinates `x` and `y`:
 """
 
 # ╔═╡ 82228247-05a0-40be-b42a-4b1338c18b8b
 data = let
 	v₀ = rand() * 10 * u"m/s"
 	θ = rand() * pi/2
-	t_range = range(; start=0u"s", stop=max_time(v₀, θ, g), length=25)
+	t_range = range(; start=0u"s", stop=time_of_flight(v₀, θ, g), length=25)
 
 	# Some quantities to modulate the random noise
 	max_height = v₀ ^ 2 * sin(θ) ^ 2 / (2 * abs(g))
 	d = total_distance(v₀, θ, g) * u"m"
 
-	# Generate the random data 
+	# Generate the data for x and y, and add random noise
 	x = displacement_x.(t_range, v₀, θ, g) .+ randn.() .* (max_height / 100)
 	y = displacement_y.(t_range, v₀, θ, g) .+ randn.() .* (d / 100)
 
@@ -189,20 +234,44 @@ data = let
 end
 
 # ╔═╡ ee419b81-f381-41d3-bbf1-37b16a4bc0cc
-scatter(data.x, data.y;
-	label="",
-	xlabel="x",
-	ylabel="y",
-)
+scatter(data.x, data.y; label="", xlabel="x", ylabel="y")
+
+# ╔═╡ 812119b0-6915-4975-9c16-465d00912870
+md"""
+Then we can use the package [`LsqFit.jl`](https://github.com/JuliaNLSolvers/LsqFit.jl) for doing a simple curve fitting.
+
+!!! warning "Caveats"
+
+    For simplicity we'll only fit the data for the vertical displacement, discarding the horizontal one.
+    Also for doing the best fitting we will have to strip the units.
+"""
 
 # ╔═╡ 5368ecc6-d37b-4d88-8fd6-c5fa78da92d1
-best_fit = curve_fit((t, p) -> ustrip(displacement_y.(t, p[1], p[2], ustrip(g))), ustrip.(data.t), ustrip.(data.y), [0.5, 0.5])
+best_fit = curve_fit((t, p) -> ustrip(displacement_y.(t, p[1], p[2], ustrip(g))),
+	ustrip.(data.t),
+	ustrip.(data.y),
+	[0.5, 0.5], # tweak the initial values for better models
+)
 
 # ╔═╡ 4a50cea7-f0eb-4a16-bcf2-522753f5712b
 let
 	plot(ustrip.(displacement_y.(ustrip.(data.t), best_fit.param[1], best_fit.param[2], ustrip.(g))); label="best model")
 	scatter!(ustrip.(data.y); label="data")
 end
+
+# ╔═╡ b5dfea75-9910-45db-bb69-67a956b9851b
+md"""
+#### More about data wrangling
+
+You can use `DataFrames.jl` to do all the classical data wrangling operations .
+Check out [the documentation](https://dataframes.juliadata.org/stable/) and play with the data below.
+"""
+
+# ╔═╡ 128fa05d-89a9-44fc-96a3-5e0fa54d27db
+filter(:x => <(1u"m"), data)
+
+# ╔═╡ 1eb5ec9f-2304-4e91-9e9a-ab57f335434d
+describe(data)
 
 # ╔═╡ 490efc11-a562-4042-bec6-60b6256c2002
 md"""
@@ -212,7 +281,7 @@ This section is not very interesting, it contains only some setup code for this 
 """
 
 # ╔═╡ 67d426e1-5985-4e9a-99cd-b9fae9e0abf1
-PlutoUI.TableOfContents(; include_definitions=false)
+PlutoUI.TableOfContents(; include_definitions=false, depth=4)
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1795,15 +1864,19 @@ version = "1.4.1+1"
 # ╟─9ff517e2-d978-4b52-ac09-3dc16b222d11
 # ╠═64a8c492-f6cd-4b31-b200-f15210fdc6af
 # ╠═ef5fe3c7-d01d-48de-a9c5-1010d8c75f5e
+# ╟─4f425f14-e2ec-4b5c-a2d2-f5614da38c7a
 # ╟─b2f7edec-14d9-4011-8d84-8fc65fd0d266
+# ╟─4e81e65a-810e-4aa7-9fc2-2d8b3d0049d6
+# ╠═48cc1cbf-91b0-424a-8645-035cd40c194a
+# ╠═33367bb4-c7d7-4011-9195-1c7b0719ec26
+# ╟─bb56b280-ba25-43f7-9cc0-c9e3e66570df
 # ╠═2068fa89-94d4-4b8d-802b-aa06258e1f90
 # ╠═06de99b9-46fa-4f2a-bdf3-4bcc12f89d0c
+# ╠═171d9bc1-6d38-4064-93a2-7e2224ab6c72
 # ╠═bafcc8b1-2519-4dc3-837b-e65fa36cbfef
 # ╠═74266685-f5c4-4b19-ab58-1dc890f885c5
-# ╠═48cc1cbf-91b0-424a-8645-035cd40c194a
 # ╠═08be6ab3-9ef3-442c-bd23-97aa68efad92
-# ╠═171d9bc1-6d38-4064-93a2-7e2224ab6c72
-# ╠═33367bb4-c7d7-4011-9195-1c7b0719ec26
+# ╟─cfddaa20-b7d7-4d96-9c89-9f3ade90b9a0
 # ╟─4f22a3c0-bdb6-415b-87bf-f8775eafa49a
 # ╟─ebf792fa-6cfe-4e43-b50c-800afa835e3f
 # ╠═ab591e9d-c2f0-430a-a06d-c86d67e54ec9
@@ -1822,10 +1895,14 @@ version = "1.4.1+1"
 # ╟─1722c037-2231-4d0a-ad16-8a63ec374046
 # ╠═dc860b9f-bceb-4c19-8675-aaa43ccf3536
 # ╠═82228247-05a0-40be-b42a-4b1338c18b8b
-# ╟─ee419b81-f381-41d3-bbf1-37b16a4bc0cc
+# ╠═ee419b81-f381-41d3-bbf1-37b16a4bc0cc
+# ╟─812119b0-6915-4975-9c16-465d00912870
 # ╠═4cb5a162-2f49-4569-9093-bb1e1d3024a4
 # ╠═5368ecc6-d37b-4d88-8fd6-c5fa78da92d1
 # ╟─4a50cea7-f0eb-4a16-bcf2-522753f5712b
+# ╟─b5dfea75-9910-45db-bb69-67a956b9851b
+# ╠═128fa05d-89a9-44fc-96a3-5e0fa54d27db
+# ╠═1eb5ec9f-2304-4e91-9e9a-ab57f335434d
 # ╟─490efc11-a562-4042-bec6-60b6256c2002
 # ╠═0b299610-118d-4bcb-8b74-b4bc4f2ebe46
 # ╠═67d426e1-5985-4e9a-99cd-b9fae9e0abf1
