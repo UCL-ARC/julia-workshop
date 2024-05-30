@@ -349,7 +349,7 @@ The coordinates $$x$$ and $$y$$ of the projectile at time $$t$$, launched at tim
 ```math
 \begin{aligned}
 x &= v_0 t \cos(\theta), \\
-y &= v_0 t \cos(\theta) - \frac{1}{2}gt^2.
+y &= v_0 t \sin(\theta) - \frac{1}{2}gt^2.
 \end{aligned}
 ```
 
