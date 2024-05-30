@@ -9,6 +9,13 @@ This repository contains the material for the [Festival of Digital Research & Sc
 > [!NOTE]
 > This is our recommended option, as you will more easily be able to keep playing with the notebook afterwards.
 
+Clone this repository (make sure to [install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)) and then enter inside the new directory by running the following commands in a terminal:
+
+```sh
+git clone https://github.com/UCL-ARC/arc-drs-2024-julia-workshop
+cd arc-drs-2024-julia-workshop
+```
+
 After [installing Julia](https://julialang.org/downloads/), start it with
 ```
 julia --project=.
