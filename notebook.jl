@@ -14,14 +14,14 @@ macro bind(def, element)
     end
 end
 
-# ╔═╡ 48cc1cbf-91b0-424a-8645-035cd40c194a
-using Unitful
-
 # ╔═╡ bafcc8b1-2519-4dc3-837b-e65fa36cbfef
 using Plots # main plotting package
 
 # ╔═╡ 74266685-f5c4-4b19-ab58-1dc890f885c5
 using PlotlyJS: PlotlyJS # provides an interactive backend for web browsers
+
+# ╔═╡ 48cc1cbf-91b0-424a-8645-035cd40c194a
+using Unitful
 
 # ╔═╡ 15b99748-69eb-4789-b9e8-243a97f3a36e
 using Optim
@@ -35,52 +35,13 @@ using LsqFit
 # ╔═╡ 0b299610-118d-4bcb-8b74-b4bc4f2ebe46
 using PlutoUI
 
-# ╔═╡ 9ff517e2-d978-4b52-ac09-3dc16b222d11
+# ╔═╡ b956f723-9404-4a2f-bda2-1ea984332064
 md"""
 # Scientific computing with Julia
+"""
 
-## What's Julia?
-
-Julia is a modern, dynamic, general-purpose, compiled programming language.
-It's interactive ("like Python"), can be used in a REPL or notebooks, like Jupyter (it's the "Ju") or Pluto (this one🎈).
-Julia has a runtime which includes a just-in-time (JIT) compiler and a garbage collector (GC), for automatic memory management.
-
-Julia is mainly used for numerical computing, diffential equations solvers suite is quite popular.
-
-Main paradigm of Julia is multiple dispatch, what functions do depend on type and number of _all_ arguments.
-
-### Why Julia?
-
-From "[My Target Audience](https://scientificcoder.com/my-target-audience)" by Matthijs Cox:
-
-$(Resource("https://cdn.hashnode.com/res/hashnode/image/upload/v1681735971356/91b6e886-7ce1-41a3-9d9f-29b7b096e7f2.png"))
-$(Resource("https://cdn.hashnode.com/res/hashnode/image/upload/v1681735992315/62fdd58f-4630-4120-8eb4-5238740543e8.png"))
-
-### Julia can be fast
-
-!!! warning "TODO"
-
-    Add figures from <https://github.com/carstenbauer/JuliaUCL24/blob/main/presentation/intro_juliahpc_ucl.pdf>
-
-### Productivity
-
-$(Resource("https://i.imgur.com/Ym5H0Pz.jpeg"))
-$(Resource("https://i.imgur.com/KZMZSru.jpeg"))
-from <https://twitter.com/ChapelLanguage/status/1623389242822111232>
-
-### Summary
-
-* Explorable & Understandable
-* Composability thanks to multiple dispatch (ask me more about this at the end!)
-* User-defined types are as fast and compact as built-ins
-* Code that is close to the mathematics
-* No need to switch languages for performance...
-* ...but you can still call C-like shared libraries with simple Foreign Function Interface (FFI) if you want to
-* Built-in package manager
-* Most packages are written in Julia: end users and software developers talk the same language
-* MIT licensed: free and open source
-
-
+# ╔═╡ f37832b0-a362-4df8-9046-74d54828032d
+md"""
 ## Pluto: reproducibility by default
 
 $(Resource("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4544406/bin/f1000research-4-7374-g0000.jpg"))
@@ -107,14 +68,276 @@ Pluto has also a tight integration with the Julia package manager, to make sure 
 To achieve this, Pluto creates a virtual environment under the hood, but whenever you use Julia outside of Pluto do remember to create a [local environment](https://pkgdocs.julialang.org/v1/environments/) for your projects!
 """
 
+# ╔═╡ 9ff517e2-d978-4b52-ac09-3dc16b222d11
+md"""
+## What's Julia?
+
+Julia is a modern, dynamic, general-purpose, compiled programming language.
+It's interactive ("like Python"), can be used in a REPL or notebooks, like Jupyter (it's the "Ju") or Pluto (this one🎈).
+Julia has a runtime which includes a just-in-time (JIT) compiler and a garbage collector (GC), for automatic memory management.
+
+Julia is mainly used for numerical computing, diffential equations solvers suite is quite popular.
+
+Main paradigm of Julia is multiple dispatch, what functions do depend on type and number of _all_ arguments.
+
+Fun fact: version 1.0 was released in London in 2018 during JuliaCon hosted at UCL!
+
+### Why Julia?
+
+From "[My Target Audience](https://scientificcoder.com/my-target-audience)" by Matthijs Cox:
+
+$(Resource("https://cdn.hashnode.com/res/hashnode/image/upload/v1681735971356/91b6e886-7ce1-41a3-9d9f-29b7b096e7f2.png"))
+$(Resource("https://cdn.hashnode.com/res/hashnode/image/upload/v1681735992315/62fdd58f-4630-4120-8eb4-5238740543e8.png"))
+
+### Two-language problem
+
+This is another way to look at two-community problem discussed above:
+
+* one language for the prototype, a different one for production, or
+* one language for the front-end, a different one for the backend.
+
+$(Resource("https://pde-on-gpu.vaw.ethz.ch/assets/literate_figures/l1_two_lang.png"))
+$(Resource("https://pde-on-gpu.vaw.ethz.ch/assets/literate_figures/l1_flux-vs-tensorflow.png"))
+
+### Performance
+
+!!! note "About performance"
+
+    Julia _can_ be fast, but it is also easy to write slow code.
+    Writing efficient code can take some practice, but you can remain in the same language, without being forced to resort to rewrite your program in a different language to achieve better performance.
+
+_Plots in this section are from the presentation of the training course [Julia for HPC @ UCL 2024](https://github.com/carstenbauer/JuliaUCL24)_
+
+#### Julia can be fast
+
+$(Resource("https://i.imgur.com/vQjzPEF.png"))
+$(Resource("https://i.imgur.com/7HLD6Ta.png"))
+
+Gradual performance improvement, no disruptive
+language change!
+
+#### Julia can be parallel
+
+$(Resource("https://i.imgur.com/FvDZF1Z.png"))
+$(Resource("https://i.imgur.com/iHh7KsQ.png"))
+
+### Productivity
+
+$(Resource("https://i.imgur.com/Ym5H0Pz.jpeg"))
+$(Resource("https://i.imgur.com/KZMZSru.jpeg"))
+from <https://twitter.com/ChapelLanguage/status/1623389242822111232>
+
+### Summary
+
+* Explorable & Understandable
+* Composability thanks to multiple dispatch
+* User-defined types are as fast and compact as built-ins
+* Code that is close to the mathematics
+* No need to switch languages for performance...
+* ...but you can still call C-like shared libraries with simple Foreign Function Interface (FFI) if you want to
+* Built-in package manager
+* Most packages are written in Julia: end users and software developers talk the same language
+* MIT licensed: free and open source
+"""
+
+# ╔═╡ 7e38a429-1d1d-4981-97a9-e3d6e530ab4f
+md"""
+## What does Julia code look like
+
+_This section is partly inspired by [ETH's course 101-0250-00L on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the Julia language](https://pde-on-gpu.vaw.ethz.ch/lecture1/)._
+"""
+
+# ╔═╡ 54f48b85-33d5-4284-b906-6062085c3c18
+function lorenz(x)
+    σ = 10
+    β = 8/3
+    ρ = 28
+    return [
+		σ * (x[2] - x[1]),
+     	x[1] * (ρ - x[3]) - x[2],
+     	x[1] * x[2] - β * x[3]
+	]
+end
+
+# ╔═╡ cfc6b81c-69f9-4a64-8c48-659b6b7be51f
+function integrate()
+	# integrate dx/dt = lorenz(t,x) numerically for 500 steps
+	dt = 0.01
+	x₀ = [2.0, 0.0, 0.0]
+	out = zeros(3, 500) # increase second dimension for more steps
+	out[:,1] = x₀
+	for i=2:size(out,2)
+    	out[:,i] = out[:,i-1] + lorenz(out[:,i-1]) * dt
+	end
+	return out
+end
+
+# ╔═╡ 1d8cf13d-dbf3-4d10-9387-830fb80e6fca
+attractor = integrate()
+
+# ╔═╡ 08be6ab3-9ef3-442c-bd23-97aa68efad92
+plotlyjs(); # enable the PlotlyJS backend
+
+# ╔═╡ 3c4c6b49-fadc-4833-a886-c8c2edcc5f7b
+plot(attractor[1,:], attractor[2,:], attractor[3,:])
+
+# ╔═╡ 4a7ba915-ef5a-4c2e-a0c0-b044017f0316
+md"""
+## Crash course on multiple dispatch
+
+From "[SIAM CSE19: Solving the Two Language Problem in Scientific Computing and Machine Learning with Julia](https://www.youtube.com/watch?v=OfMP5PTFQk0)" (acceptance speech for J. H. Wilkinson Prize 2019 for Numerical Software)
+
+$(Resource("https://i.imgur.com/QqUPohw.png"))
+
+_Based on the blogpost "[Rock–paper–scissors game in less than 10 lines of code](https://giordano.github.io/blog/2017-11-03-rock-paper-scissors)"._
+"""
+
+
+# ╔═╡ 2fc1cab7-d477-4487-a101-1a1aae214865
+begin
+	abstract type Shape end
+	struct Rock     <: Shape end
+	struct Paper    <: Shape end
+	struct Scissors <: Shape end
+	play(::Type{Paper}, ::Type{Rock})     = "Paper wins"
+	play(::Type{Paper}, ::Type{Scissors}) = "Scissors wins"
+	play(::Type{Rock},  ::Type{Scissors}) = "Rock wins"
+	play(::Type{T},     ::Type{T}) where {T<: Shape} = "Tie, try again"
+	play(a::Type{<:Shape}, b::Type{<:Shape}) = play(b, a) # Commutativity
+end
+
+# ╔═╡ a8a6ab01-1c32-45c5-80f9-1ba0f49cdfcb
+md"""
+You can also extend to more data structures
+"""
+
+# ╔═╡ 6074a761-3264-42cd-9a67-fb8fcea557ca
+begin
+	struct Well <: Shape end
+	play(::Type{Well}, ::Type{Rock})     = "Well wins"
+	play(::Type{Well}, ::Type{Scissors}) = "Well wins"
+	play(::Type{Well}, ::Type{Paper})    = "Paper wins"
+end
+
+# ╔═╡ c75a74b1-651b-4d26-b8e3-0b6c4c3d3a59
+play(Paper, Scissors)
+
+# ╔═╡ f04b4438-3bea-4d7f-bbd8-6c7ea800cc9f
+play(Rock, Rock)
+
+# ╔═╡ cde75794-0f43-40e7-b2e4-9a748bf67431
+play(Rock, Paper)
+
+# ╔═╡ 8f875943-61d1-45f8-9b37-a75fff536da9
+play(Paper, Well)
+
+# ╔═╡ 2730f18e-dc79-448d-97cd-b32da0221abc
+play(Well, Rock)
+
+# ╔═╡ 534d35aa-e5cc-4507-b440-cbf53764a4dd
+play(Well, Well)
+
+# ╔═╡ 87a54b0d-2e42-4fe9-a40e-4567ae9fcb87
+md"""
+Multiple dispatch is the key ingredient to make Julia packages very composable!
+"""
+
+# ╔═╡ 1ab78041-e834-4fac-a1f7-1fb3b14fc394
+md"""
+## Play with Julia code
+
+### Basic datatypes
+
+#### Numbers
+"""
+
+# ╔═╡ 0d2421e4-4a9f-405d-831b-9146056110aa
+my_integer = 42
+
+# ╔═╡ 506a56cf-675f-42f4-99c6-45ca025ec7f4
+my_float = 3.14
+
+# ╔═╡ d614d6c7-49b4-4b38-822a-6fbc295e675d
+my_integer + my_float
+
+# ╔═╡ f50d27fd-f101-489c-b240-ee14c8c1dd33
+my_float / my_integer
+
+# ╔═╡ 1a1e2a98-2338-4673-b599-a435f83a1fbe
+md"""
+#### Strings
+"""
+
+# ╔═╡ 8ae49a36-670b-493d-8957-29436ff9519c
+my_string = "hello world"
+
+# ╔═╡ 4266fc68-5fbf-4c2f-85a6-f2064b1ca52d
+println(my_string)
+
+# ╔═╡ df57efba-663f-4408-914a-e4ff00902d97
+greet(name::String) = println("Hello ", name)
+
+# ╔═╡ b8901b06-fa08-4a6c-ad44-0965a55f8ca8
+greet("UCL ARC")
+
+# ╔═╡ de339ded-7430-4d87-aa00-edbf3eee0f1a
+md"""
+#### Vectors and multi-dimensional arrays
+"""
+
+# ╔═╡ c8afa835-47c7-488b-8827-e72c3df3a43f
+my_vector = [1, 2, 3, 5, 7, 11, 13]
+
+# ╔═╡ 2a13f83a-cfa7-48d7-9c42-651698428b6d
+my_vector[1]
+
+# ╔═╡ 936fb03d-ea61-42a3-b389-21cbb351fd35
+my_vector[3:5]
+
+# ╔═╡ 3e60fa18-e8e7-44c2-9c46-45ab1fca1537
+new_vector = [1, 1, 2, 3, 5, 8, 13]
+
+# ╔═╡ 2f32386b-eed2-4f42-847a-4629d9522701
+my_vector + new_vector
+
+# ╔═╡ 61e6ab7f-e16e-444c-b73a-df3ac15cb7e7
+my_vector * new_vector'
+
+# ╔═╡ 020d657b-f8fd-44d5-aea9-dd579e4af180
+my_matrix = randn(3, 3)
+
+# ╔═╡ 7ffe9fd0-d724-4567-86da-bf57bd215215
+my_matrix[2, 2]
+
+# ╔═╡ 9bb42815-39ad-4cc2-a3c0-30b2fd6c2152
+my_matrix[1:3, 2]
+
+# ╔═╡ 0d71f10f-f753-48cd-baff-da0460e3a419
+my_matrix ^ 2
+
+# ╔═╡ 132aa1da-7051-4da7-8643-2c5497fa6b3d
+my_matrix * my_vector[1:3]
+
+# ╔═╡ c6163ccc-3a4e-409c-b21d-347858e7a134
+md"""
+#### Dictionaries
+"""
+
+# ╔═╡ d0e2fbe1-fc53-42dd-a984-08607c097b7d
+my_dictionary = Dict("a" => 97, "b" => 98, "c" => 99)
+
+# ╔═╡ 84469f69-f90f-4a6e-bb21-de399bcf16a5
+my_dictionary["a"]
+
+# ╔═╡ 0057156f-9a23-4ec7-bd2f-f5d1fa28b3fd
+my_dictionary["d"] = 100
+
+# ╔═╡ 4d6cecf8-273d-42e6-a405-2fbf45ec8a21
+my_dictionary
+
 # ╔═╡ b2f7edec-14d9-4011-8d84-8fc65fd0d266
 md"""
 ## Hands-on tutorial: ideal projectile (no air resistance)
-
-!!! note
-
-    With this tutorial we want to give you a taste of what you can do with Julia: numerical computation, plotting, data wrangling, etc.
-    However this is _not_ a full introductory course to this programming language.
 
 For this hands-on we will study the [motion of an ideal projectile](https://en.wikipedia.org/wiki/Projectile_motion), without air resistance or any other complication.
 
@@ -158,9 +381,6 @@ displacement_y(t, v₀, θ, g) = v₀ * t * sin(θ) - (g * t ^ 2) / 2
 
 # ╔═╡ 171d9bc1-6d38-4064-93a2-7e2224ab6c72
 time_of_flight(v₀, θ, g) = 2 * v₀ * sin(θ) / g
-
-# ╔═╡ 08be6ab3-9ef3-442c-bd23-97aa68efad92
-plotlyjs(); # enable the PlotlyJS backend
 
 # ╔═╡ cfddaa20-b7d7-4d96-9c89-9f3ade90b9a0
 md"""
@@ -302,8 +522,8 @@ best_fit = curve_fit((t, p) -> ustrip(displacement_y.(t, p[1], p[2], ustrip(g)))
 
 # ╔═╡ 4a50cea7-f0eb-4a16-bcf2-522753f5712b
 let
-	plot(ustrip.(displacement_y.(ustrip.(data.t), best_fit.param[1], best_fit.param[2], ustrip.(g))); label="best model")
-	scatter!(ustrip.(data.y); label="data")
+	scatter(ustrip.(data.y); label="data")
+	plot!(ustrip.(displacement_y.(ustrip.(data.t), best_fit.param[1], best_fit.param[2], ustrip.(g))); label="best model")
 end
 
 # ╔═╡ b5dfea75-9910-45db-bb69-67a956b9851b
@@ -1908,10 +2128,58 @@ version = "1.4.1+1"
 """
 
 # ╔═╡ Cell order:
-# ╠═9ff517e2-d978-4b52-ac09-3dc16b222d11
+# ╟─b956f723-9404-4a2f-bda2-1ea984332064
+# ╟─f37832b0-a362-4df8-9046-74d54828032d
 # ╠═64a8c492-f6cd-4b31-b200-f15210fdc6af
 # ╠═ef5fe3c7-d01d-48de-a9c5-1010d8c75f5e
 # ╟─4f425f14-e2ec-4b5c-a2d2-f5614da38c7a
+# ╟─9ff517e2-d978-4b52-ac09-3dc16b222d11
+# ╟─7e38a429-1d1d-4981-97a9-e3d6e530ab4f
+# ╠═54f48b85-33d5-4284-b906-6062085c3c18
+# ╠═cfc6b81c-69f9-4a64-8c48-659b6b7be51f
+# ╠═1d8cf13d-dbf3-4d10-9387-830fb80e6fca
+# ╠═bafcc8b1-2519-4dc3-837b-e65fa36cbfef
+# ╠═74266685-f5c4-4b19-ab58-1dc890f885c5
+# ╠═08be6ab3-9ef3-442c-bd23-97aa68efad92
+# ╠═3c4c6b49-fadc-4833-a886-c8c2edcc5f7b
+# ╟─4a7ba915-ef5a-4c2e-a0c0-b044017f0316
+# ╠═2fc1cab7-d477-4487-a101-1a1aae214865
+# ╠═c75a74b1-651b-4d26-b8e3-0b6c4c3d3a59
+# ╠═f04b4438-3bea-4d7f-bbd8-6c7ea800cc9f
+# ╠═cde75794-0f43-40e7-b2e4-9a748bf67431
+# ╟─a8a6ab01-1c32-45c5-80f9-1ba0f49cdfcb
+# ╠═6074a761-3264-42cd-9a67-fb8fcea557ca
+# ╠═8f875943-61d1-45f8-9b37-a75fff536da9
+# ╠═2730f18e-dc79-448d-97cd-b32da0221abc
+# ╠═534d35aa-e5cc-4507-b440-cbf53764a4dd
+# ╟─87a54b0d-2e42-4fe9-a40e-4567ae9fcb87
+# ╟─1ab78041-e834-4fac-a1f7-1fb3b14fc394
+# ╠═0d2421e4-4a9f-405d-831b-9146056110aa
+# ╠═506a56cf-675f-42f4-99c6-45ca025ec7f4
+# ╠═d614d6c7-49b4-4b38-822a-6fbc295e675d
+# ╠═f50d27fd-f101-489c-b240-ee14c8c1dd33
+# ╟─1a1e2a98-2338-4673-b599-a435f83a1fbe
+# ╠═8ae49a36-670b-493d-8957-29436ff9519c
+# ╠═4266fc68-5fbf-4c2f-85a6-f2064b1ca52d
+# ╠═df57efba-663f-4408-914a-e4ff00902d97
+# ╠═b8901b06-fa08-4a6c-ad44-0965a55f8ca8
+# ╟─de339ded-7430-4d87-aa00-edbf3eee0f1a
+# ╠═c8afa835-47c7-488b-8827-e72c3df3a43f
+# ╠═2a13f83a-cfa7-48d7-9c42-651698428b6d
+# ╠═936fb03d-ea61-42a3-b389-21cbb351fd35
+# ╠═3e60fa18-e8e7-44c2-9c46-45ab1fca1537
+# ╠═2f32386b-eed2-4f42-847a-4629d9522701
+# ╠═61e6ab7f-e16e-444c-b73a-df3ac15cb7e7
+# ╠═020d657b-f8fd-44d5-aea9-dd579e4af180
+# ╠═7ffe9fd0-d724-4567-86da-bf57bd215215
+# ╠═9bb42815-39ad-4cc2-a3c0-30b2fd6c2152
+# ╠═0d71f10f-f753-48cd-baff-da0460e3a419
+# ╠═132aa1da-7051-4da7-8643-2c5497fa6b3d
+# ╟─c6163ccc-3a4e-409c-b21d-347858e7a134
+# ╠═d0e2fbe1-fc53-42dd-a984-08607c097b7d
+# ╠═84469f69-f90f-4a6e-bb21-de399bcf16a5
+# ╠═0057156f-9a23-4ec7-bd2f-f5d1fa28b3fd
+# ╠═4d6cecf8-273d-42e6-a405-2fbf45ec8a21
 # ╟─b2f7edec-14d9-4011-8d84-8fc65fd0d266
 # ╟─4e81e65a-810e-4aa7-9fc2-2d8b3d0049d6
 # ╠═48cc1cbf-91b0-424a-8645-035cd40c194a
@@ -1920,9 +2188,6 @@ version = "1.4.1+1"
 # ╠═2068fa89-94d4-4b8d-802b-aa06258e1f90
 # ╠═06de99b9-46fa-4f2a-bdf3-4bcc12f89d0c
 # ╠═171d9bc1-6d38-4064-93a2-7e2224ab6c72
-# ╠═bafcc8b1-2519-4dc3-837b-e65fa36cbfef
-# ╠═74266685-f5c4-4b19-ab58-1dc890f885c5
-# ╠═08be6ab3-9ef3-442c-bd23-97aa68efad92
 # ╟─cfddaa20-b7d7-4d96-9c89-9f3ade90b9a0
 # ╟─4f22a3c0-bdb6-415b-87bf-f8775eafa49a
 # ╟─ebf792fa-6cfe-4e43-b50c-800afa835e3f
