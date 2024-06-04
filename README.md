@@ -1,6 +1,6 @@
-# Julia workshop for the Festival of Digital Research & Scholarship
+# Julia workshop for the UCL Festival of Digital Research & Scholarship 2024
 
-This repository contains the material for the [Festival of Digital Research & Scholarship](https://www.ucl.ac.uk/advanced-research-computing/events/2024/jun/festival-digital-research-scholarship).
+This repository contains the material for the [UCL Festival of Digital Research & Scholarship 2024](https://www.ucl.ac.uk/advanced-research-computing/events/2024/jun/festival-digital-research-scholarship).
 
 ## Running the notebook
 
@@ -12,8 +12,8 @@ This repository contains the material for the [Festival of Digital Research & Sc
 Clone this repository (make sure to [install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)) and then enter inside the new directory by running the following commands in a terminal:
 
 ```sh
-git clone https://github.com/UCL-ARC/arc-drs-2024-julia-workshop
-cd arc-drs-2024-julia-workshop
+git clone https://github.com/UCL-ARC/julia-workshop
+cd julia-workshop
 ```
 
 After [installing Julia](https://julialang.org/downloads/), start it with
@@ -35,16 +35,16 @@ Pluto.run()
 
 ### Using a Docker container
 
-We also provide a [Docker image](https://github.com/UCL-ARC/arc-drs-2024-julia-workshop/pkgs/container/arc-drs-2024-julia-workshop) (built for `linux/amd64` and `linux/arm64`) for running the notebook, which you can pull with
+We also provide a [Docker image](https://github.com/UCL-ARC/julia-workshop/pkgs/container/julia-workshop) (built for `linux/amd64` and `linux/arm64`) for running the notebook, which you can pull with
 
 ```
-docker pull ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main
+docker pull ghcr.io/ucl-arc/julia-workshop:main
 ```
 
 and then run the notebook with
 
 ```
-docker run -p 1234:1234 -ti ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main julia -e 'using Pluto; Pluto.run(; host="0.0.0.0", port=1234)'
+docker run -p 1234:1234 -ti ghcr.io/ucl-arc/julia-workshop:main julia -e 'using Pluto; Pluto.run(; host="0.0.0.0", port=1234)'
 ```
 
 You will need to load the notebook saved at `/root/notebook.jl`.
@@ -52,7 +52,7 @@ You will need to load the notebook saved at `/root/notebook.jl`.
 ### GitHub Codespaces
 
 You can also take advantage of the ability of [GitHub Codespaces](https://github.com/features/codespaces) to run custom web apps.
-Go go the [Codespaces page of this repository](https://github.com/UCL-ARC/arc-drs-2024-julia-workshop/codespaces), click on the green button on the top right "Create codespace on main" and wait a few seconds for the codespace to start.
+Go go the [Codespaces page of this repository](https://github.com/UCL-ARC/julia-workshop/codespaces), click on the green button on the top right "Create codespace on main" and wait a few seconds for the codespace to start.
 In the bottom panel, go to the "Terminal" tab (other tabs should be "Problems", "Output", "Debug console", "Ports") and when you see the message (this can take a few seconds to appear after the codespace started, hold on)
 
 ```
