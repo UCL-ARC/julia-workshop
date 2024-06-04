@@ -1,6 +1,6 @@
 {
     "name": "Julia workshop for the Festival of Digital Research & Scholarship",
-    "image": "ghcr.io/ucl-arc/arc-drs-2024-julia-workshop:main",
+    "image": "ghcr.io/ucl-arc/julia-workshop:main",
 
     "customizations": {
 	"vscode": {
