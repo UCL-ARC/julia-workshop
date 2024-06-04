@@ -466,7 +466,7 @@ The value of the initial $\theta$ which maximizes the range of the projectile is
 """
 
 # ╔═╡ 36cd06ae-f7fc-4775-ba15-57bf1fcdc709
-Optim.minimizer(result)[1]
+mod(Optim.minimizer(result)[1], pi/2) # We want angles in the range [0, pi/2]
 
 # ╔═╡ 1722c037-2231-4d0a-ad16-8a63ec374046
 md"""
