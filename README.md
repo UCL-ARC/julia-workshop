@@ -68,7 +68,7 @@ This will launch Pluto within the container, and if successful you should see a 
 
 where `hgY7as1X` in the URL will be replaced with another random alphanumeric string. The Pluto notebook environment is accessed as a web app, so you should open a browser window and navigate to the URL indicated in the message to open the Pluto interface. If you get `Unable to connect` message or similar when trying to open the URL, you may need to replace the `0.0.0.0` component with `localhost`, so for the example above you would navigate to `http://localhost:1234/?secret=hgY7as1X`. 
 
-Once you have the Pluto interface open in your browse, you will need to load the notebook saved at `/root/notebook.jl`, to open the notebook, find the `Open a notebook` section in the Pluto interface and click on the `Enter path or URL...` field and select `root/` and then `notebook.jl` from the drop-down file naviagtor and then click the `Open` button to open the example notebook we will be using.
+Once you have the Pluto interface open in your browser, you will need to load the notebook saved at `/root/notebook.jl`, to open the notebook, find the `Open a notebook` section in the Pluto interface and click on the `Enter path or URL...` field and select `root/` and then `notebook.jl` from the drop-down file naviagtor and then click the `Open` button to open the example notebook we will be using.
 
 ### GitHub Codespaces
 
