@@ -576,7 +576,7 @@ julia = "~1.10"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.10.3"
+julia_version = "1.10.4"
 manifest_format = "2.0"
 project_hash = "6749f9a5cd4403655db8bacf5503f28bb125e022"
 
