@@ -76,9 +76,9 @@ Julia is a modern, dynamic, general-purpose, compiled programming language.
 It's interactive ("like Python"), can be used in a REPL or notebooks, like Jupyter (it's the "Ju") or Pluto (this one🎈).
 Julia has a runtime which includes a just-in-time (JIT) compiler and a garbage collector (GC), for automatic memory management.
 
-Julia is mainly used for numerical computing, differential equations solvers suite is quite popular.
+Julia is mainly used for numerical computing; the differential equations solvers suite is particularly popular.
 
-Main paradigm of Julia is multiple dispatch, what functions do depend on type and number of _all_ arguments.
+The main paradigm of Julia is multiple dispatch: the ability of functions or methods to depend on the type and number of _all_ its arguments.
 
 Fun fact: version 1.0 was released in London in 2018 during JuliaCon hosted at UCL!
 
@@ -353,7 +353,7 @@ y &= v_0 t \sin(\theta) - \frac{1}{2}gt^2.
 \end{aligned}
 ```
 
-Furthermore, the [time of flight](https://en.wikipedia.org/wiki/Projectile_motion#Time_of_flight_or_total_time_of_the_whole_journey) of the projectile (the time after which the projectile reaches again the ground, $$y = 0$$) is given by
+Furthermore, the [time of flight](https://en.wikipedia.org/wiki/Projectile_motion#Time_of_flight_or_total_time_of_the_whole_journey) of the projectile (the time after which the projectile reaches the ground again, i.e. $$y = 0$$) is given by
 
 ```math
 t = \frac{2v_0\sin(\theta)}{g}.
@@ -362,7 +362,7 @@ t = \frac{2v_0\sin(\theta)}{g}.
 
 # ╔═╡ 4e81e65a-810e-4aa7-9fc2-2d8b3d0049d6
 md"""
-The constant $$g$$ is the [acceleration of gravity](https://en.wikipedia.org/wiki/Standard_gravity).  Let's set a Julia variable with value $$9.81~\mathrm{m}/\mathrm{s}^2$$:
+where $$g$$ is the constant of the [acceleration of gravity](https://en.wikipedia.org/wiki/Standard_gravity).  Let's set a Julia variable with value $$9.81~\mathrm{m}/\mathrm{s}^2$$:
 """
 
 # ╔═╡ 33367bb4-c7d7-4011-9195-1c7b0719ec26
@@ -449,8 +449,8 @@ total_distance(v₀, θ, g) = ustrip(u"m", v₀ ^ 2 * sin(2 * θ) / abs(g))
 
 # ╔═╡ 8dfeac4b-47f5-4e7a-a34b-0976ae60304a
 md"""
-The `optimize` function from `Optmi.jl` tries to _minimize_ the value of the objective function passed as input, but in our case we want to find when `total_distance` is _maximum_, to do this we'll try to minimize the function `-total_distance`.
-Also, we want to vary only the launch angle $\theta$ while keeping the other parameters fixed, to do this we can write an [anonymous function](https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions) with the `->` syntax.
+We will use the `optimize` function from `Optmi.jl`, which tries to _minimize_ the value of the objective function passed as input. However, in our case we want to find when `total_distance` is _maximum_, so to do this we'll try to minimize the function `-total_distance`.
+Additionally, we want to vary only the launch angle, $\theta$, while keeping the other parameters fixed. To do this, we can write an [anonymous function](https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions) with the `->` syntax.
 Finally, note that the [`Optim.jl` API](https://julianlsolvers.github.io/Optim.jl/stable/user/minimization/) expects the objective function to take a _vector_ of parameters as the only input argument, even if it is only one, so we'll write the anonymous function keeping this in mind (always read the documentation!).
 """
 
@@ -476,7 +476,7 @@ Play with the slider of `θ` above to verify this result.
 ### Dealing with data
 
 In this section we want to have a look at the tools available in the Julia ecosystem that may be useful for data science.
-The reference package in this domain [`DataFrames.jl`](https://github.com/JuliaData/DataFrames.jl), which has similar functionalities to analogous packages in other packages like `data.frame` in R, or Pandas and Polars in Python.
+The reference package in this domain is [`DataFrames.jl`](https://github.com/JuliaData/DataFrames.jl), which has similar functionalities to analogous packages in other packages like `data.frame` in R, or Pandas and Polars in Python.
 
 Let's generate a dataframe which contains the data of a simulated projectile trajectory.
 Columns represent the time `t`, and the corresponding coordinates `x` and `y`:
@@ -510,7 +510,7 @@ Then we can use the package [`LsqFit.jl`](https://github.com/JuliaNLSolvers/LsqF
 !!! warning "Caveats"
 
     For simplicity we'll only fit the data for the vertical displacement, discarding the horizontal one.
-    Also for doing the best fitting we will have to strip the units.
+    Also, for obtaining the best fit, we will have to strip the units.
 """
 
 # ╔═╡ 5368ecc6-d37b-4d88-8fd6-c5fa78da92d1
