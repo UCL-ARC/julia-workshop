@@ -510,7 +510,7 @@ Then we can use the package [`LsqFit.jl`](https://github.com/JuliaNLSolvers/LsqF
 !!! warning "Caveats"
 
     For simplicity we'll only fit the data for the vertical displacement, discarding the horizontal one.
-    Also, for obtaining the best fitting, we will have to strip the units.
+    Also, for obtaining the best fit, we will have to strip the units.
 """
 
 # ╔═╡ 5368ecc6-d37b-4d88-8fd6-c5fa78da92d1
