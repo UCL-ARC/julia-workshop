@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM julia:1.10.3
+FROM julia:1.10.4
 
 # Install git
 RUN /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive \
