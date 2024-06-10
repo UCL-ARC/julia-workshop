@@ -76,7 +76,7 @@ Julia is a modern, dynamic, general-purpose, compiled programming language.
 It's interactive ("like Python"), can be used in a REPL or notebooks, like Jupyter (it's the "Ju") or Pluto (this one🎈).
 Julia has a runtime which includes a just-in-time (JIT) compiler and a garbage collector (GC), for automatic memory management.
 
-Julia is mainly used for numerical computing, diffential equations solvers suite is quite popular.
+Julia is mainly used for numerical computing, differential equations solvers suite is quite popular.
 
 Main paradigm of Julia is multiple dispatch, what functions do depend on type and number of _all_ arguments.
 
@@ -450,7 +450,7 @@ total_distance(v₀, θ, g) = ustrip(u"m", v₀ ^ 2 * sin(2 * θ) / abs(g))
 # ╔═╡ 8dfeac4b-47f5-4e7a-a34b-0976ae60304a
 md"""
 The `optimize` function from `Optmi.jl` tries to _minimize_ the value of the objective function passed as input, but in our case we want to find when `total_distance` is _maximum_, to do this we'll try to minimize the function `-total_distance`.
-Also, we want to vary only the launch angle $\theta$ while keeping the other paramaters fixed, to do this we can write an [anonymous function](https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions) with the `->` syntax.
+Also, we want to vary only the launch angle $\theta$ while keeping the other parameters fixed, to do this we can write an [anonymous function](https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions) with the `->` syntax.
 Finally, note that the [`Optim.jl` API](https://julianlsolvers.github.io/Optim.jl/stable/user/minimization/) expects the objective function to take a _vector_ of parameters as the only input argument, even if it is only one, so we'll write the anonymous function keeping this in mind (always read the documentation!).
 """
 
