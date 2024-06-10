@@ -33,7 +33,7 @@ using Pluto
 Pluto.run()
 ```
 
-This should open a tab in your default browser showing the Pluto interface. From there find the `Open a notebook` section and click on the `Enter path or URL...` field and select `notebook.jl` from the drop-down and then click the `Open` button to open the example notebook we will be using.
+This should open a tab in your default browser showing the Pluto interface. From there find the `Open a notebook` section and click on the `Enter path or URL...` field. Select `notebook.jl` from the drop-down and then click the `Open` button to open the example notebook we will be using.
 
 > [!NOTE]
 > The notebook will initially be opened in _Safe preview_ mode which allows you to view and edit the notebook content but not run any code, or view the rendered outputs. This is a security measure to prevent malicious notebooks being run automatically that may try to steal data. To exit from _Safe preview_ mode either click the _Safe preview ⓘ_ information button at the bottom of the interface and click `run this notebook` or click on the `Run notebook code` link in the top-right of the interface.
@@ -46,13 +46,13 @@ We also provide a [Docker image](https://github.com/UCL-ARC/julia-workshop/pkgs/
 docker pull ghcr.io/ucl-arc/julia-workshop:main
 ```
 
-and then run [Pluto](https://plutojl.org/), the interactive notebook environment we will be using, with (if on MacOS or Linux)
+The interactive notebook environment we will be using, [Pluto](https://plutojl.org/), can then be run on MacOS or Linux with
 
 ```sh
 docker run -p 1234:1234 -ti ghcr.io/ucl-arc/julia-workshop:main julia -e 'using Pluto; Pluto.run(; host="0.0.0.0", port=1234)'
 ```
 
-or if using PowerShell on Windows run
+or if using PowerShell on Windows with
 
 ```PowerShell
 docker run -p 1234:1234 -ti ghcr.io/ucl-arc/julia-workshop:main julia -e 'using Pluto; Pluto.run(; host=""""0.0.0.0"""", port=1234)'
@@ -68,7 +68,7 @@ This will launch Pluto within the container, and if successful you should see a 
 
 where `hgY7as1X` in the URL will be replaced with another random alphanumeric string. The Pluto notebook environment is accessed as a web app, so you should open a browser window and navigate to the URL indicated in the message to open the Pluto interface. If you get `Unable to connect` message or similar when trying to open the URL, you may need to replace the `0.0.0.0` component with `localhost`, so for the example above you would navigate to `http://localhost:1234/?secret=hgY7as1X`. 
 
-Once you have the Pluto interface open in your browser, you will need to load the notebook saved at `/root/notebook.jl`, to open the notebook, find the `Open a notebook` section in the Pluto interface and click on the `Enter path or URL...` field and select `root/` and then `notebook.jl` from the drop-down file naviagtor and then click the `Open` button to open the example notebook we will be using.
+Once you have the Pluto interface open in your browser, you will need to load the notebook saved at `/root/notebook.jl`. To open the notebook, find the `Open a notebook` section in the Pluto interface, click on the `Enter path or URL...` field and select `root/` and then `notebook.jl` from the drop-down file navigator and finally click the `Open` button to open the example notebook we will be using.
 
 ### GitHub Codespaces
 
@@ -82,9 +82,9 @@ In the bottom panel, go to the "Terminal" tab (other tabs should be "Problems", 
 └ Go to http://localhost:1234/ in your browser to start writing ~ have fun!
 ```
 
-then go to the "Ports" tab, right click on the "Pluto server (1234)" port and click on "Open in browser" (alternatively, click on the globe-shaped button under the "Forwarded Addressses" column).
+go to the "Ports" tab, right click on the "Pluto server (1234)" port and click on "Open in browser" (alternatively, click on the globe-shaped button under the "Forwarded Addresses" column).
 This will open the Pluto landing page in a new tab in your browser and from there you can open the existing notebook saved at `notebook.jl`.
 
-If you want to make your app accessible to others (but make sure there's no sensitive or private data in it!), in the "Ports" tab right click on the "Pluto server (1234)" port and then "Port visibility" -> "Public".
+If you want to make your app accessible to others (please remember to make sure there's no sensitive or private data in it!), navigate to the "Ports" tab, right click on the "Pluto server (1234)" port and then "Port visibility" -> "Public".
 
 The `.devcontainer` has been adapted from [Zero-setup R workshops with GitHub Codespaces](https://github.com/revodavid/devcontainers-rstudio) repository presented at [rstudio::conf 2022](https://rstudioconf2022.sched.com/event/11iag/zero-setup-r-workshops-with-github-codespaces).
