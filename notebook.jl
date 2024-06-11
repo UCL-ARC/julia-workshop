@@ -57,6 +57,10 @@ You can also use widgets to set the value of variables.
 
 # ╔═╡ 64a8c492-f6cd-4b31-b200-f15210fdc6af
 a = 2
+
+## to make `a` into a slider, uncomment the following line and comment the above one.
+## Comments in Julia use the # syntax.
+
 # @bind a Slider(0:10; show_value=true, default=2)
 
 # ╔═╡ ef5fe3c7-d01d-48de-a9c5-1010d8c75f5e
