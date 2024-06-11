@@ -555,6 +555,19 @@ filter(:x => <(1u"m"), data)
 # ╔═╡ 1eb5ec9f-2304-4e91-9e9a-ab57f335434d
 describe(data)
 
+# ╔═╡ 7a647923-f4a6-4cbe-ae13-546e55760b36
+md"""
+## Do you need help with Julia?
+
+* Get in touch with the [ARC Collaborations group](https://www.ucl.ac.uk/advanced-research-computing/collaborations-and-consultancy) for collaboration on funded project
+* Engage with the [Julia community](https://julialang.org/community/), e.g. [Discourse web forum](https://discourse.julialang.org/)
+* Learning resource:
+  * [Official documentation](https://docs.julialang.org/)
+  * [Other learning resources](https://julialang.org/learning/)
+  * [doggo dot jl YouTube channel](https://www.youtube.com/@doggodotjl)
+  * [Julia for HPC @ UCL 2024](https://github.com/carstenbauer/JuliaUCL24)
+"""
+
 # ╔═╡ 490efc11-a562-4042-bec6-60b6256c2002
 md"""
 ## Notebook setup
@@ -2232,6 +2245,7 @@ version = "1.4.1+1"
 # ╟─b5dfea75-9910-45db-bb69-67a956b9851b
 # ╠═128fa05d-89a9-44fc-96a3-5e0fa54d27db
 # ╠═1eb5ec9f-2304-4e91-9e9a-ab57f335434d
+# ╟─7a647923-f4a6-4cbe-ae13-546e55760b36
 # ╟─490efc11-a562-4042-bec6-60b6256c2002
 # ╠═0b299610-118d-4bcb-8b74-b4bc4f2ebe46
 # ╠═67d426e1-5985-4e9a-99cd-b9fae9e0abf1
