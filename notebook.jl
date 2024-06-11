@@ -21,7 +21,7 @@ using Plots # main plotting package
 using PlotlyJS: PlotlyJS # provides an interactive backend for web browsers
 
 # ╔═╡ 48cc1cbf-91b0-424a-8645-035cd40c194a
-using Unitful
+using Unitful # package for adding physical units to numbers
 
 # ╔═╡ 15b99748-69eb-4789-b9e8-243a97f3a36e
 using Optim
@@ -453,16 +453,23 @@ total_distance(v₀, θ, g) = ustrip(u"m", v₀ ^ 2 * sin(2 * θ) / abs(g))
 
 # ╔═╡ 8dfeac4b-47f5-4e7a-a34b-0976ae60304a
 md"""
-We will use the `optimize` function from `Optmi.jl`, which tries to _minimize_ the value of the objective function passed as input. However, in our case we want to find when `total_distance` is _maximum_, so to do this we'll try to minimize the function `-total_distance`.
-Additionally, we want to vary only the launch angle, $\theta$, while keeping the other parameters fixed. To do this, we can write an [anonymous function](https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions) with the `->` syntax.
+We will use the `optimize` function from `Optmi.jl`, which tries to _minimize_ the value of the objective function passed as input.
+However, in our case we want to find when `total_distance` is _maximum_, so to do this we'll try to minimize the function `-total_distance`.
+Additionally, we want to vary only the launch angle, $\theta$, while keeping the other parameters fixed.
+To do this, we can write an [anonymous function](https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions) with the `->` syntax.
 Finally, note that the [`Optim.jl` API](https://julianlsolvers.github.io/Optim.jl/stable/user/minimization/) expects the objective function to take a _vector_ of parameters as the only input argument, even if it is only one, so we'll write the anonymous function keeping this in mind (always read the documentation!).
+With the drop-down menu below you can choose different minimization algorithims.
 """
 
 # ╔═╡ 4775cb36-5991-4ef5-a150-cb614caf8326
 @bind minim_algorithm Select([NelderMead, SimulatedAnnealing, BFGS, LBFGS, ConjugateGradient, GradientDescent, MomentumGradientDescent, AcceleratedGradientDescent, Newton, NewtonTrustRegion]; default=BFGS)
 
 # ╔═╡ c58d3cfb-a234-44cd-89b8-1cb072b84c26
-result = optimize(θ -> -total_distance(v₀, θ[1], g), [1.0], minim_algorithm()) # we want to maximize the total distance!
+result = optimize(
+	θ -> -total_distance(v₀, θ[1], g), # Target function to minimize: remember we want to maximize the total distance!
+	[1.0], # Initial guess for the free parameter(s)
+	minim_algorithm() # Minimization algorithm (change it with the drop-drown menu)
+)
 
 # ╔═╡ 48ce8d19-e01d-4894-8441-5eaca0c675a2
 md"""
