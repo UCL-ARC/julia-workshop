@@ -35,6 +35,9 @@ using LsqFit
 # ╔═╡ 0b299610-118d-4bcb-8b74-b4bc4f2ebe46
 using PlutoUI
 
+# ╔═╡ eb48686d-86a9-48fb-9543-b809d5d025be
+html"<button onclick='present()'>Toggle presentation mode</button>"
+
 # ╔═╡ b956f723-9404-4a2f-bda2-1ea984332064
 md"""
 # Scientific computing with Julia
@@ -2140,6 +2143,7 @@ version = "1.4.1+1"
 """
 
 # ╔═╡ Cell order:
+# ╟─eb48686d-86a9-48fb-9543-b809d5d025be
 # ╟─b956f723-9404-4a2f-bda2-1ea984332064
 # ╟─f37832b0-a362-4df8-9046-74d54828032d
 # ╠═64a8c492-f6cd-4b31-b200-f15210fdc6af
