@@ -525,10 +525,11 @@ Then we can use the package [`LsqFit.jl`](https://github.com/JuliaNLSolvers/LsqF
 """
 
 # ╔═╡ 5368ecc6-d37b-4d88-8fd6-c5fa78da92d1
-best_fit = curve_fit((t, p) -> ustrip(displacement_y.(t, p[1], p[2], ustrip(g))),
-	ustrip.(data.t),
-	ustrip.(data.y),
-	[0.5, 0.5], # tweak the initial values for better models
+best_fit = curve_fit(
+	(t, p) -> ustrip(displacement_y.(t, p[1], p[2], ustrip(g))), # Function to fit
+	ustrip.(data.t), # data on the "x axis"
+	ustrip.(data.y), # data on the "y axis"
+	[0.5, 0.5], # Initial guesses for parameters `v₀` and `θ`: tweak them for better models
 )
 
 # ╔═╡ 4a50cea7-f0eb-4a16-bcf2-522753f5712b
